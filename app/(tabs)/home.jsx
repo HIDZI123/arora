@@ -6,12 +6,12 @@ import {
   ScrollView,
   Image,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import PostCard from "../../components/PostCard"; // Import PostCard component
 import { icons, images } from "./../../constants";
 import HomePageCard from "../../components/HomepageCard";
 import axios from "axios";
-import { TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
@@ -20,7 +20,7 @@ const Home = () => {
 
   const cardData = [
     { title: "Safest Route", img: icons.safest_route, link: "/heatmap" },
-    { title: "Book A Ride", img: icons.book_a_ride, link: "./features/book-a-ride" },
+    { title: "Book A Ride", img: icons.book_a_ride, link: "/book-a-ride" },
     { title: "Report Incident", img: icons.report_incident, link: "/create" },
     {
       title: "Safety Alerts",
@@ -38,7 +38,7 @@ const Home = () => {
       link: "/emergency-contacts",
     },
     { title: "Join Webinars", img: icons.webinar, link: "/webinar" },
-    { title: "Chat Bot", img: icons.chat_bot, link: "/chat-bot" },
+    { title: "Chat Bot", img: icons.chat_bot, link: "/chatbot" },
   ];
 
   const [postData, setPostData] = useState([]);
@@ -50,9 +50,12 @@ const Home = () => {
       const response = await axios.get(
         "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/get-post"
       );
-      // Use response.data if the API returns an array directly
-      //console.log("Fetched post data:", response.data); // Debugging line
-      setPostData(response.data || []); // Update the state with the fetched data
+      console.log("Fetched post data:", response.data); // Debugging line
+
+      // Assuming response.data is an array of post objects
+      if (response.data && response.data.length > 0) {
+        setPostData(response.data.data);
+      } 
     } catch (error) {
       console.error(
         "Error during fetching posts:",
@@ -82,7 +85,8 @@ const Home = () => {
           <View>
             <Text className="text-xl text-gray-500">Hello, </Text>
             <Text className="text-2xl font-extrabold">
-              Hi {user?.data?.user?.username ? user.data.user.username : "Guest"}
+              Hi{" "}
+              {user?.data?.user?.username ? user.data.user.username : "Guest"}
             </Text>
           </View>
 
@@ -123,7 +127,18 @@ const Home = () => {
           <Text className="font-pbold text-xl mb-4">Nearest Posts</Text>
           {postData && postData.length > 0 ? (
             postData.map((post) => (
-              <PostCard key={post._id} post={post} />
+              <PostCard
+                key={post._id}
+                description={post.description}
+                location={post.location}
+                type={post.type}
+                audioFile={post.audioFile}
+                videoFile={post.videoFile}
+                imageFiles={post.imageFiles} // if you have images to display
+                like={post.like}
+                dislike={post.dislike}
+                createdAt={post.createdAt}
+              />
             ))
           ) : (
             <Text className="text-gray-500">No posts available.</Text>
