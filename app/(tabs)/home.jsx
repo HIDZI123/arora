@@ -1,149 +1,137 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Button, ActivityIndicator } from "react-native";
-import MapView, { UrlTile, Marker } from "react-native-maps";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  RefreshControl,
+} from "react-native";
+import PostCard from "../../components/PostCard"; // Import PostCard component
+import { icons, images } from "./../../constants";
+import HomePageCard from "../../components/HomepageCard";
 import axios from "axios";
+import { TouchableOpacity } from "react-native";
+import { router } from "expo-router";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
-const MapScreen = () => {
-  const mapTilerAPIKey = "aHUEnRceg03OQys2K9jt"; // Replace with your MapTiler API key
+const Home = () => {
+  const { user } = useGlobalContext();
 
-  const [showIncidents, setShowIncidents] = useState(true); // Toggle to show/hide incidents
-  const [incidents, setIncidents] = useState([]); // Incident data from the backend
-  const [loading, setLoading] = useState(false); // Loading state
+  const cardData = [
+    { title: "Safest Route", img: icons.safest_route, link: "/heatmap" },
+    { title: "Book A Ride", img: icons.book_a_ride, link: "/book-a-ride" },
+    { title: "Report Incident", img: icons.report_incident, link: "/create" },
+    {
+      title: "Safety Alerts",
+      img: icons.safety_alerts,
+      link: "/safety-alerts",
+    },
+    {
+      title: "Educational Resources",
+      img: icons.find_nearby,
+      link: "/educational-resources",
+    },
+    {
+      title: "S. O. S.",
+      img: icons.emergency_contacts,
+      link: "/emergency-contacts",
+    },
+    { title: "Join Webinars", img: icons.webinar, link: "/webinar" },
+    { title: "Chat Bot", img: icons.chat_bot, link: "/chat-bot" },
+  ];
+
+  const [postData, setPostData] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchData = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await axios.get(
+        "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/get-post"
+      );
+      // Use response.data if the API returns an array directly
+      console.log("Fetched post data:", response.data); // Debugging line
+      setPostData(response.data || []); // Update the state with the fetched data
+    } catch (error) {
+      console.error(
+        "Error during fetching posts:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    // Fetch incidents from the backend
-    const fetchIncidents = async () => {
-      setLoading(true); // Set loading to true while fetching data
-      try {
-        const response = await axios.get(
-          "https://qd1v2drq-8000.inc1.devtunnels.ms/api/posts/get-post"
-        ); // Replace with your actual API URL
-        const data = response.data; // Assuming response.data contains an array of incidents
-
-        // Extract latitude and longitude from the response
-        const coordinates = data.map(({ latitude, longitude }) => ({
-          latitude,
-          longitude,
-        }));
-
-        setIncidents(data); // Update incidents state with the API response
-      } catch (error) {
-        console.error("Error fetching incidents:", error);
-      } finally {
-        setLoading(false); // Stop loading even in case of error
-      }
-    };
-
-    fetchIncidents(); // Call the function to fetch data on component mount
-
-    // Create dummy incidents
-    const dummyIncidents = [
-      {
-        latitude: 19.076,
-        longitude: 72.8777,
-        type: "Dummy Incident 1",
-        description: "Description for dummy incident 1",
-      },
-      {
-        latitude: 19.086,
-        longitude: 72.8877,
-        type: "Dummy Incident 2",
-        description: "Description for dummy incident 2",
-      },
-      {
-        latitude: 19.096,
-        longitude: 72.8977,
-        type: "Dummy Incident 3",
-        description: "Description for dummy incident 3",
-      },
-    ];
-
-    setIncidents((prevIncidents) => [...prevIncidents, ...dummyIncidents]);
+    fetchData();
   }, []);
 
   return (
-    <View style={styles.container}>
-      {/* Map View */}
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 19.076, // Center around Mumbai (latitude and longitude)
-          longitude: 72.8777,
-          latitudeDelta: 0.05, // Zoom level
-          longitudeDelta: 0.05,
-        }}
-      >
-        {/* MapTiler Tile Layer */}
-        <UrlTile
-          urlTemplate={`https://api.maptiler.com/maps/satellite/256/{z}/{x}/{y}.png?key=${mapTilerAPIKey}`}
-          maximumZ={19}
-          flipY={false} // For non-flipped tiles
-        />
-
-        {/* Show incidents if toggled on */}
-        {showIncidents &&
-          incidents.map((incident, index) => (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: incident.latitude,
-                longitude: incident.longitude,
-              }}
-              title={incident.type}
-              description={incident.description}
-            />
-          ))}
-      </MapView>
-
-      {/* Buttons to toggle incidents visibility */}
-      <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <Button
-            title={showIncidents ? "Hide Incidents" : "Show Incidents"}
-            onPress={() => setShowIncidents(!showIncidents)}
-            color={showIncidents ? "red" : "green"}
+    <SafeAreaView className="flex-1 bg-[#FAF7F0] mt-10">
+      <ScrollView
+        contentContainerStyle="flex-grow p-4"
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={fetchData} // Call fetchData when user pulls to refresh
           />
-        </View>
-      </View>
+        }
+      >
+        <View className="mt-10 flex-row justify-between mx-3">
+          <View>
+            <Text className="text-xl text-gray-500">Hello, </Text>
+            <Text className="text-2xl font-extrabold">
+              Hi {user?.data?.user?.username ? user.data.user.username : "Guest"}
+            </Text>
+          </View>
 
-      {/* Loading Spinner */}
-      {loading && (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <TouchableOpacity onPress={() => router.push("/profile")}>
+            <Image source={images.profile} className="rounded-full h-16 w-16" />
+          </TouchableOpacity>
         </View>
-      )}
-    </View>
+
+        <View className="bg-orange-400 rounded-md mx-4 mt-12 p-4">
+          <View className="flex-row justify-around items-center">
+            <Image
+              source={icons.location_marker}
+              className="h-16 w-16 rounded-full"
+            />
+            <Text className="text-white font-psemibold text-xl">
+              Your Location
+            </Text>
+          </View>
+          <Text className="text-white font-pmedium text-right mr-12">
+            Malad
+          </Text>
+        </View>
+
+        <View className="flex-row flex-wrap mt-8">
+          {cardData.map((card, index) => (
+            <View key={index} className="w-1/3 p-2">
+              <HomePageCard
+                title={card.title}
+                img={card.img}
+                link={card.link}
+              />
+            </View>
+          ))}
+        </View>
+
+        {/* Nearest Posts Section */}
+        <View className="mx-4 mt-5">
+          <Text className="font-pbold text-xl mb-4">Nearest Posts</Text>
+          {postData && postData.length > 0 ? (
+            postData.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))
+          ) : (
+            <Text className="text-gray-500">No posts available.</Text>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 30,
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  buttonContainer: {
-    position: "absolute",
-    bottom: 20, // Position the buttons near the bottom
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    justifyContent: "center", // Center buttons horizontally
-  },
-  button: {
-    width: 150, // Button width
-    marginHorizontal: 10, // Space between buttons
-    borderRadius: 10, // Rounded corners for the button container
-    overflow: "hidden", // Ensures rounded corners on Button
-  },
-  loadingContainer: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -50 }, { translateY: -50 }],
-  },
-});
-
-export default MapScreen;
+export default Home;

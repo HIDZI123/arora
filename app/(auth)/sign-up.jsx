@@ -24,7 +24,7 @@ const SignUp = () => {
     const { username, email, password } = form;
 
     try {
-        const response = await axios.post('https://6nddmv2g-8000.inc1.devtunnels.ms/api/users/register', {
+        const response = await axios.post('https://tf43zhh1-8000.inc1.devtunnels.ms/api/users/register', {
             username,
             email,
             password
