@@ -37,12 +37,13 @@ const Home = () => {
       img: icons.emergency_contacts,
       link: "/emergency-contacts",
     },
-    { title: "Join Webinars", img: icons.webinar, link: "/webinar" },
+    { title: "Webinars & Drills", img: icons.webinar, link: "/webinar" },
     { title: "Chat Bot", img: icons.chat_bot, link: "/chatbot" },
   ];
 
-  const [postData, setPostData] = useState([]);
+  const [postData, setPostData] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const data = [{"__v": 0, "_id": "66f7b2acf31173ae8e85153d", "audioFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509164/bngvklc4zxckp5tug9wn.ogg", "comments": [Array], "createdAt": "2024-09-28T07:39:24.515Z", "description": "Two cars collided at Junction, No casualties but heavy traffic", "dislike": 2, "imageFiles": [Array], "latitude": 19.191032, "like": 12, "location": "Malad , Mumbai", "longitude": 72.856205, "summary": "The incident occurred at Junction due to a two-vehicle collision, with an unspecified number of people involved. Hallmarks of the event were the absence of casualties, as initially stated, and the heavy traffic congestion resulting from a reported 'terrible traffic situation'.", "type": "Accident", "updatedAt": "2024-09-28T07:39:24.515Z", "videoFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509163/tzm2cnf6ax5mfwtpq33e.mp4"}, {"__v": 0, "_id": "66f7b39ef31173ae8e85153f", "audioFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509406/b2fnabtwozynfisk5mtp.ogg", "comments": [Array], "createdAt": "2024-09-28T07:43:26.716Z", "description": "A backpack was stolen from a park bench at Park. The owner left it unattended for a few minutes.", "dislike": 2, "imageFiles": [Array], "latitude": 19.175278, "like": 15, "location": "Thane", "longitude": 72.972416, "type": "Accident", "updatedAt": "2024-09-28T07:43:26.716Z", "videoFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509405/o5mfy5gc1wkixuzwojwt.mp4"}, {"__v": 0, "_id": "66f7b3f6f31173ae8e851541", "audioFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509493/tasi0j7vyxhvkjzheesh.ogg", "comments": [Array], "createdAt": "2024-09-28T07:44:54.210Z", "description": " A man was reported harassing women outside the coffee shop on 2nd Street.", "dislike": 2, "imageFiles": [Array], "latitude": 19.175278, "like": 15, "location": "Goregaon , Mumbai", "longitude": 72.972416, "type": "Harassment", "updatedAt": "2024-09-28T07:44:54.210Z", "videoFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509492/umefvuap27n4uglf62pk.mp4"}, {"__v": 0, "_id": "66f7b516f31173ae8e85154b", "audioFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509781/ogs3kkjqt6cv8zanm69h.ogg", "comments": [Array], "createdAt": "2024-09-28T07:49:42.281Z", "description": "A vehicle with no license plates has been parked near the school for over an hour.", "dislike": 2, "imageFiles": [Array], "latitude": 19.415346, "like": 15, "location": "Nalasopara , Thane", "longitude": 72.863872, "type": "Suspicious Activity", "updatedAt": "2024-09-28T07:49:42.281Z", "videoFile": "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509780/ghnmnv8muw6octamopme.mp4"}]
 
   const fetchData = async () => {
     setIsRefreshing(true);
@@ -50,11 +51,11 @@ const Home = () => {
       const response = await axios.get(
         "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/get-post"
       );
-      console.log("Fetched post data:", response.data); // Debugging line
+      console.log("Fetched post data:", response.data.data); // Debugging line
 
       // Assuming response.data is an array of post objects
-      if (response.data && response.data.length > 0) {
-        setPostData(response.data.data);
+      if (response.data.data && response.data.data.length > 0) {
+        setPostData(response.data.data || []);
       } 
     } catch (error) {
       console.error(
@@ -129,15 +130,7 @@ const Home = () => {
             postData.map((post) => (
               <PostCard
                 key={post._id}
-                description={post.description}
-                location={post.location}
-                type={post.type}
-                audioFile={post.audioFile}
-                videoFile={post.videoFile}
-                imageFiles={post.imageFiles} // if you have images to display
-                like={post.like}
-                dislike={post.dislike}
-                createdAt={post.createdAt}
+                post={post}
               />
             ))
           ) : (
