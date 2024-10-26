@@ -1,21 +1,23 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { Tabs, Redirect } from "expo-router";
-import { Image } from "react-native";
-import { icons } from "../../constants";
+import { StatusBar } from "expo-status-bar";
+import { Redirect, Tabs } from "expo-router";
+import { Image, Text, View } from "react-native";
 
-const TabIcon = ({ icons, color, focused, name }) => {
+import { icons } from "../../constants";
+// import { Loader } from "../../components";
+// import { useGlobalContext } from "../../context/GlobalProvider";
+
+const TabIcon = ({ icon, color, name, focused }) => {
   return (
-    <View className="items-center justify-center gap-1">
+    <View className="flex items-center justify-center gap-2">
       <Image
-        source={icons}
+        source={icon}
         resizeMode="contain"
         tintColor={color}
         className="w-6 h-6"
       />
       <Text
-        className={` ${focused ? "font-psemibold" : "font-pregular"} text-xs`}
-        style = {{color : color}}
+        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
+        style={{ color: color }}
       >
         {name}
       </Text>
@@ -23,20 +25,24 @@ const TabIcon = ({ icons, color, focused, name }) => {
   );
 };
 
-const TabsLayout = () => {
+const TabLayout = () => {
+  // const { loading, isLogged } = useGlobalContext();
+
+  // if (!loading && !isLogged) return <Redirect href="/sign-in" />;
+
   return (
     <>
       <Tabs
         screenOptions={{
-          tabBarShowLabel: false,
           tabBarActiveTintColor: "#FFA001",
           tabBarInactiveTintColor: "#CDCDE0",
-          tabBarStyle : {
-            backgroundColor : "#161622",
-            height:84,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: "#161622",
             borderTopWidth: 1,
             borderTopColor: "#232533",
-          }
+            height: 84,
+          },
         }}
       >
         <Tabs.Screen
@@ -46,62 +52,70 @@ const TabsLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icons={icons.home}
-                name={"Home"}
-                focused={focused}
+                icon={icons.home}
                 color={color}
+                name="Home"
+                focused={focused}
               />
             ),
           }}
         />
+
         <Tabs.Screen
+          name="map"
+          options={{
+            title: "Map",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.plus}
+                color={color}
+                name="Map"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="heatmap"
+          options={{
+            title: "HeatMap",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.bookmark}
+                color={color}
+                name="HeatMap"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+
+
+      <Tabs.Screen
           name="create"
           options={{
-            title: "Create",
+            title: "CreateIncident",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icons={icons.plus}
-                name={"Create"}
-                focused={focused}
+                icon={icons.plus}
                 color={color}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="bookmark"
-          options={{
-            title: "Bookmark",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icons={icons.bookmark}
-                name={"Bookmark"}
+                name="Incidents"
                 focused={focused}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: "Profile",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icons={icons.profile}
-                name={"Profile"}
-                focused={focused}
-                color={color}
               />
             ),
           }}
         />
       </Tabs>
+      
+
+      {/* <Loader isLoading={loading} /> */}
+      <StatusBar backgroundColor="#161622" style="light" />
     </>
   );
 };
 
-export default TabsLayout;
+export default TabLayout;
