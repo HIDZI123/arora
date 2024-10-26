@@ -8,7 +8,7 @@ const WebinarComponent = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await axios.get('https://6nddmv2g-8000.inc1.devtunnels.ms/api/webinars/get-webinars');
+                const response = await axios.get('https://tf43zhh1-8000.inc1.devtunnels.msr/api/webinars/get-webinars');
                 setWebinars(response.data);
             } catch (e) {
                 console.log(e);

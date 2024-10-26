@@ -83,8 +83,8 @@ const createPolygon = (center, radius) => {
 
 const MapComponent = () => {
     const [points, setPoints] = useState([]); // Points for routing
-    const [route, setRoute] = useState(null);
-    const [customMode, setCustomMode] = useState(false); // Toggle for custom mode
+    const [shortestRoute, setShortestRoute] = useState(null);
+    const [avoidingHeatmapRoute, setAvoidingHeatmapRoute] = useState(null);
 
     // Function to handle map press events for waypoints
     const handleMapPress = (e) => {
@@ -93,7 +93,7 @@ const MapComponent = () => {
     };
 
     // Function to request route from GraphHopper API
-    const getRoute = async () => {
+    const getRoutes = async () => {
         if (points.length < 2) {
             console.error("At least 2 points are required for routing.");
             return; // Exit if not enough points
@@ -101,10 +101,9 @@ const MapComponent = () => {
 
         const graphHopperPoints = points.map((point) => [point[1], point[0]]);
 
-        const requestData = {
+        // Request for the shortest route
+        const shortestRouteRequest = {
             points: graphHopperPoints,
-            snap_preventions: ["motorway", "ferry", "tunnel"],
-            details: ["road_class", "surface"],
             profile: "car",
             locale: "en",
             instructions: true,
@@ -112,49 +111,60 @@ const MapComponent = () => {
             points_encoded: false,
         };
 
-        if (customMode) {
-            const polygons = staticPolygons.map((polygon) => {
-                return createPolygon(polygon.center, polygon.radius);
-            });
-
-            requestData.custom_model = {
+        // Request for the route avoiding heatmaps
+        const avoidHeatmapRequest = {
+            ...shortestRouteRequest,
+            custom_model: {
                 priority: staticPolygons.map((_, index) => ({
                     if: `in_polygon_${index}`,
                     multiply_by: 0, // Avoid areas
                 })),
                 areas: {
                     type: "FeatureCollection",
-                    features: polygons.map((polygon, index) => ({
+                    features: staticPolygons.map((polygon, index) => ({
                         type: "Feature",
                         id: `polygon_${index}`,
                         properties: {},
                         geometry: {
                             type: "Polygon",
                             coordinates: [[
-                                ...polygon.map(coord => [coord.longitude, coord.latitude]),
-                                [polygon[0].longitude, polygon[0].latitude] // Close the polygon
+                                ...createPolygon(polygon.center, polygon.radius).map(coord => [coord.longitude, coord.latitude]),
+                                [createPolygon(polygon.center, polygon.radius)[0].longitude, createPolygon(polygon.center, polygon.radius)[0].latitude] // Close the polygon
                             ]],
                         },
                     })),
                 },
-            };
-            requestData["ch.disable"] = true; // Enable custom model
-        }
-
-        console.log("Request Data:", requestData);
+            },
+            "ch.disable": true, // Enable custom model
+        };
 
         try {
-            const response = await axios.post(
-                "https://graphhopper.com/api/1/route?key=39748f00-db16-4556-97e0-6a8327b3a402", // Replace with your API key
-                requestData
+            // Fetch shortest route
+            const shortestResponse = await axios.post(
+                "https://graphhopper.com/api/1/route?key=39748f00-db16-4556-97e0-6a8327b3a402",
+                shortestRouteRequest
             );
 
-            const graphHopperRoute =
-                response.data.paths[0].points.coordinates.map((coord) => [
+            const shortestRouteData =
+                shortestResponse.data.paths[0].points.coordinates.map((coord) => [
                     coord[1],
                     coord[0],
                 ]);
-            setRoute(graphHopperRoute);
+            setShortestRoute(shortestRouteData);
+
+            // Fetch route avoiding heatmaps
+            const avoidHeatmapResponse = await axios.post(
+                "https://graphhopper.com/api/1/route?key=39748f00-db16-4556-97e0-6a8327b3a402",
+                avoidHeatmapRequest
+            );
+
+            const avoidHeatmapRouteData =
+                avoidHeatmapResponse.data.paths[0].points.coordinates.map((coord) => [
+                    coord[1],
+                    coord[0],
+                ]);
+            setAvoidingHeatmapRoute(avoidHeatmapRouteData);
+
         } catch (error) {
             console.error("Error fetching route:", error);
             if (error.response) {
@@ -163,11 +173,12 @@ const MapComponent = () => {
         }
     };
 
-    // Function to clear the route
-    const clearRoute = () => {
-        setRoute(null); // Clear the route
+    // Function to clear the routes
+    const clearRoutes = () => {
+        setShortestRoute(null); // Clear the shortest route
+        setAvoidingHeatmapRoute(null); // Clear the heatmap-avoiding route
         setPoints([]); // Clear the points
-        Alert.alert("Route cleared", "The route has been successfully removed."); // Alert for confirmation
+        Alert.alert("Routes cleared", "Both routes have been successfully removed."); // Alert for confirmation
     };
 
     return (
@@ -187,8 +198,23 @@ const MapComponent = () => {
                     <Marker key={index} coordinate={{ latitude: point[0], longitude: point[1] }} />
                 ))}
 
-                {/* Draw polyline for the route */}
-                {route && <Polyline coordinates={route.map(coord => ({ latitude: coord[0], longitude: coord[1] }))} strokeColor="blue" strokeWidth={3} />}
+                {/* Draw polyline for the shortest route */}
+                {shortestRoute && (
+                    <Polyline
+                        coordinates={shortestRoute.map(coord => ({ latitude: coord[0], longitude: coord[1] }))}
+                        strokeColor="black"
+                        strokeWidth={4}
+                    />
+                )}
+
+                {/* Draw polyline for the route avoiding heatmaps */}
+                {avoidingHeatmapRoute && (
+                    <Polyline
+                        coordinates={avoidingHeatmapRoute.map(coord => ({ latitude: coord[0], longitude: coord[1] }))}
+                        strokeColor="green"
+                        strokeWidth={4}
+                    />
+                )}
 
                 {/* Draw polygons for avoidance areas */}
                 {staticPolygons.length > 0 &&
@@ -206,23 +232,14 @@ const MapComponent = () => {
                     })}
             </MapView>
 
-            {/* Toggle for custom mode */}
-            <View style={styles.switchContainer}>
-                <Text>Avoid Heatmap</Text>
-                <Switch
-                    value={customMode}
-                    onValueChange={() => setCustomMode((prev) => !prev)}
-                />
-            </View>
-
-            {/* Circular Button to fetch and draw the route */}
-            <TouchableOpacity style={styles.circleButton} onPress={getRoute}>
+            {/* Circular Button to fetch and draw the routes */}
+            <TouchableOpacity style={styles.circleButton} onPress={getRoutes}>
                 <Icon name="route" size={35} color="white" />
                 <Text style={styles.buttonText}>Go</Text>
             </TouchableOpacity>
 
-            {/* Button to clear the route */}
-            <TouchableOpacity style={styles.clearButton} onPress={clearRoute}>
+            {/* Button to clear the routes */}
+            <TouchableOpacity style={styles.clearButton} onPress={clearRoutes}>
                 <Icon name="trash" size={20} color="white" />
                 <Text style={styles.buttonText}>Clear</Text>
             </TouchableOpacity>
@@ -239,15 +256,6 @@ const styles = StyleSheet.create({
     map: {
         width: '100%',
         height: '100%',
-    },
-    switchContainer: {
-        position: "absolute",
-        top: 50,
-        left: 10,
-        zIndex: 1000,
-        backgroundColor: "white",
-        padding: 10,
-        borderRadius: 5,
     },
     circleButton: {
         position: 'absolute',
