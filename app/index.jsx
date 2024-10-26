@@ -17,9 +17,6 @@ export default function App() {
   }, [isLogged])
 
 
-
-
-
   return (
     <SafeAreaView className="bg-[#FAF7F0] h-full">
       <ScrollView
@@ -34,21 +31,21 @@ export default function App() {
               className="w-full h-[150px]"
               resizeMode="contain"
             />
-            {/* <Text className="text-black-100">Safeरक्षक</Text> */}
+            
           </View>
           <View className="shadow-2xl w-full">
             <Image
               source={images.cards}
-              className="ml-5 max-w-[800px] w-full h-[298px]"
+              className="ml-2 mr-4 max-w-[800px] w-full h-[298px] "
               resizeMode="cover"
             />
           </View>
 
           <View className="relative mt-5">
             <Text className="text-3xl text-slate-700 font-bold text-center">
-              Discover Endless{"\n"}
-              Possibilities with{" "}
-              <Text className="text-secondary-200">Safeरक्षक</Text>
+              Feel Safe {"           \n              "}
+              Feel Free{"                   "}
+              <Text className=" text-secondary-200">Navनारी</Text>
             </Text>
 
             <Image
@@ -59,8 +56,7 @@ export default function App() {
           </View>
 
           <Text className="text-sm font-pregular text-gray-100 mt-7 text-center">
-            Where Creativity Meets Innovation: Embark on a Journey of Limitless
-            Exploration with Safeरक्षक
+            Empowering Safety with Navनारी:                    Step into a World of Boundless Security and Confidence.
           </Text>
 
           <CustomButton

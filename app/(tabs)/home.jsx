@@ -20,7 +20,7 @@ const Home = () => {
 
   const cardData = [
     { title: "Safest Route", img: icons.safest_route, link: "/heatmap" },
-    { title: "Book A Ride", img: icons.book_a_ride, link: "/book-a-ride" },
+    { title: "Book A Ride", img: icons.book_a_ride, link: "./features/book-a-ride" },
     { title: "Report Incident", img: icons.report_incident, link: "/create" },
     {
       title: "Safety Alerts",
