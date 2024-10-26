@@ -9,6 +9,7 @@ const MapScreen = () => {
   const [showIncidents, setShowIncidents] = useState(true); // Toggle to show/hide incidents
   const [incidents, setIncidents] = useState([]); // Incident data from the backend
   const [loading, setLoading] = useState(false); // Loading state
+  const [dummyIncidents, setDummyIncidents] = useState([]); // Dummy incidents
 
   useEffect(() => {
     // Fetch incidents from the backend
@@ -19,18 +20,12 @@ const MapScreen = () => {
           "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/get-post"
         ); // Replace with your actual API URL
         const data = response.data; // Assuming response.data contains an array of incidents
-
-        // Extract latitude and longitude from the response
-        const coordinates = data.map(({ latitude, longitude }) => ({
-          latitude,
-          longitude,
-        }));
-
-        setIncidents(data); // Update incidents state with the API response
+        console.log("Incidents fetched:", data.data);
+        setIncidents(data.data); // Update incidents state with the API response
       } catch (error) {
         console.error("Error fetching incidents:", error);
       } finally {
-        setLoading(false); // Stop loading even in case of error
+        setLoading(false); 
       }
     };
 
@@ -39,24 +34,80 @@ const MapScreen = () => {
     // Create dummy incidents
     const dummyIncidents = [
       {
-        latitude: 19.076,
-        longitude: 72.8777,
-        type: "Dummy Incident 1",
-        description: "Description for dummy incident 1",
+        latitude: 19.0653,
+        longitude: 72.8797,
+        type: " Incident 7",
+        description: "Suspicious activity reported near Kurla Railway Station",
       },
       {
-        latitude: 19.086,
-        longitude: 72.8877,
-        type: "Dummy Incident 2",
-        description: "Description for dummy incident 2",
+        latitude: 19.0698,
+        longitude: 72.8744,
+        type: " Incident 8",
+        description: "Loud noise complaint from residential area in Kurla West",
       },
       {
-        latitude: 19.096,
-        longitude: 72.8977,
-        type: "Dummy Incident 3",
-        description: "Description for dummy incident 3",
+        latitude: 19.0634,
+        longitude: 72.8805,
+        type: " Incident 9",
+        description: "Traffic congestion observed near Phoenix Marketcity Mall",
       },
+      {
+        latitude: 19.0679,
+        longitude: 72.8732,
+        type: " Incident 10",
+        description: "Stray dog sighting near Kurla bus depot",
+      },
+      {
+        latitude: 19.0617,
+        longitude: 72.8789,
+        type: " Incident 11",
+        description: "Minor accident near BKC connector, Kurla East",
+      },
+      {
+        latitude: 19.0721,
+        longitude: 72.8708,
+        type: " Incident 12",
+        description: "Unauthorized parking reported in a commercial area, Kurla",
+      },
+      // Additional  Incidents
+      {
+        latitude: 19.0758,
+        longitude: 72.8679,
+        type: " Incident 13",
+        description: "Theft reported near Lokmanya Tilak Terminus, Kurla",
+      },
+      {
+        latitude: 19.0669,
+        longitude: 72.8812,
+        type: " Incident 14",
+        description: "Fire alarm triggered in an office building, Kurla East",
+      },
+      {
+        latitude: 19.0625,
+        longitude: 72.8768,
+        type: " Incident 15",
+        description: "Fight reported at a local bar near Kurla West",
+      },
+      {
+        latitude: 19.0743,
+        longitude: 72.8741,
+        type: " Incident 16",
+        description: "Vehicle breakdown causing traffic near LBS Road, Kurla",
+      },
+      {
+        latitude: 19.0681,
+        longitude: 72.8735,
+        type: " Incident 17",
+        description: "Noise complaint from construction site, Kurla East",
+      },
+      {
+        latitude: 19.0710,
+        longitude: 72.8782,
+        type: " Incident 18",
+        description: "Street light malfunction reported near Kurla Market",
+      }
     ];
+    setDummyIncidents(dummyIncidents);
 
     setIncidents((prevIncidents) => [...prevIncidents, ...dummyIncidents]);
   }, []);
@@ -82,7 +133,7 @@ const MapScreen = () => {
 
         {/* Show incidents if toggled on */}
         {showIncidents &&
-          incidents.map((incident, index) => (
+          dummyIncidents.map((incident, index) => (
             <Marker
               key={index}
               coordinate={{
