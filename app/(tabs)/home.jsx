@@ -51,7 +51,7 @@ const Home = () => {
       const response = await axios.get(
         "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/get-post"
       );
-      console.log("Fetched post data:", response.data.data); // Debugging line
+      //console.log("Fetched post data:", response.data.data); // Debugging line
 
       // Assuming response.data is an array of post objects
       if (response.data.data && response.data.data.length > 0) {
