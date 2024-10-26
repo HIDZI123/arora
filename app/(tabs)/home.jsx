@@ -51,7 +51,7 @@ const Home = () => {
         "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/get-post"
       );
       // Use response.data if the API returns an array directly
-      console.log("Fetched post data:", response.data); // Debugging line
+      //console.log("Fetched post data:", response.data); // Debugging line
       setPostData(response.data || []); // Update the state with the fetched data
     } catch (error) {
       console.error(
@@ -102,7 +102,7 @@ const Home = () => {
             </Text>
           </View>
           <Text className="text-white font-pmedium text-right mr-12">
-            Malad
+            Kurla
           </Text>
         </View>
 

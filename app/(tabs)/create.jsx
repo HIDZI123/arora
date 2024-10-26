@@ -67,18 +67,27 @@ const CreateIncident = ({ onSubmit }) => {
   };
 
   const fetchAreaFromCoordinates = async (latitude, longitude) => {
+    const apiKey = "481d4c5872394224891c17558ab0c022"; // Replace with your OpenCage API key
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
       );
       const data = await response.json();
-      if (data && data.display_name) {
-        setArea(data.display_name);
+      //console.log(data);
+      
+      if (data && data.results && data.results[0] && data.results[0].formatted) {
+        // Extract formatted address
+        const formattedAddress = data.results[0].formatted;
+        // Slice everything after "Mumbai"
+        const slicedAddress = formattedAddress.split("Mumbai")[0] + "Mumbai";
+        setArea(slicedAddress);
       }
     } catch (error) {
       console.error("Error fetching area:", error);
     }
   };
+  
+  
 
   useEffect(() => {
     getCurrentLocation();
