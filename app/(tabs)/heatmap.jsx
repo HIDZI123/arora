@@ -141,7 +141,7 @@ const MapComponent = () => {
         try {
             // Fetch shortest route
             const shortestResponse = await axios.post(
-                "https://graphhopper.com/api/1/route?key=39748f00-db16-4556-97e0-6a8327b3a402",
+                "https://graphhopper.com/api/1/route?key=ffe308b0-02b3-447f-989e-3593bedcc607",
                 shortestRouteRequest
             );
 
@@ -154,7 +154,7 @@ const MapComponent = () => {
 
             // Fetch route avoiding heatmaps
             const avoidHeatmapResponse = await axios.post(
-                "https://graphhopper.com/api/1/route?key=39748f00-db16-4556-97e0-6a8327b3a402",
+                "https://graphhopper.com/api/1/route?key=ffe308b0-02b3-447f-989e-3593bedcc607",
                 avoidHeatmapRequest
             );
 
@@ -204,6 +204,7 @@ const MapComponent = () => {
                         coordinates={shortestRoute.map(coord => ({ latitude: coord[0], longitude: coord[1] }))}
                         strokeColor="black"
                         strokeWidth={4}
+                        zIndex={1}
                     />
                 )}
 
@@ -211,8 +212,10 @@ const MapComponent = () => {
                 {avoidingHeatmapRoute && (
                     <Polyline
                         coordinates={avoidingHeatmapRoute.map(coord => ({ latitude: coord[0], longitude: coord[1] }))}
-                        strokeColor="green"
-                        strokeWidth={4}
+                        strokeColor="#00FF00"
+                        strokeWidth={6}
+                        zIndex={2}
+                        lineDashPattern={[5, 5]}
                     />
                 )}
 
@@ -227,6 +230,7 @@ const MapComponent = () => {
                                 strokeColor="red"
                                 fillColor="rgba(255, 0, 0, 0.2)"
                                 strokeWidth={2}
+                                zIndex={0}
                             />
                         );
                     })}
