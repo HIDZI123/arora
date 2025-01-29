@@ -175,7 +175,7 @@ const CreateIncident = ({ onSubmit }) => {
 
     try {
       const response = await axios.post(
-        "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/send-post",
+        "https://vt9hf745-8000.inc1.devtunnels.ms/api/posts/send-post",
         incident
       );
       console.log("Incident submitted successfully:", response.data);

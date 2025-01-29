@@ -16,7 +16,7 @@ const MapScreen = () => {
       setLoading(true); // Set loading to true while fetching data
       try {
         const response = await axios.get(
-          "https://tf43zhh1-8000.inc1.devtunnels.ms/api/posts/get-post"
+          "https://vt9hf745-8000.inc1.devtunnels.ms/api/posts/get-post"
         ); // Replace with your actual API URL
         const data = response.data; // Assuming response.data contains an array of incidents
 
