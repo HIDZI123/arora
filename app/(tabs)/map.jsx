@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Button, ActivityIndicator, Text, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Button,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import MapView, { UrlTile, Marker } from "react-native-maps";
 import axios from "axios";
 import { images } from "../../constants";
@@ -18,7 +26,7 @@ const MapScreen = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "https://vt9hf745-3000.inc1.devtunnels.ms/api/posts/get-post"
+          "https://2xrn8gcc-3000.inc1.devtunnels.ms/api/posts/get-post"
         );
         const data = response.data;
         setIncidents(data.data);
@@ -42,7 +50,7 @@ const MapScreen = () => {
         description: "Teenager missing near Kurla Railway Station",
         image: images.mimg,
         lastSeen: "2025-01-28 15:30",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0698,
@@ -50,10 +58,11 @@ const MapScreen = () => {
         type: "Missing Report 2",
         caseReference: "KRL-2025-002",
         fullName: "Priya Sharma",
-        description: "Middle-aged woman reported missing from a residential area in Kurla West",
+        description:
+          "Middle-aged woman reported missing from a residential area in Kurla West",
         image: images.mimg,
         lastSeen: "2025-01-28 18:45",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0634,
@@ -64,7 +73,7 @@ const MapScreen = () => {
         description: "Child missing from Phoenix Marketcity Mall, Kurla",
         image: images.mimg,
         lastSeen: "2025-01-28 14:20",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0679,
@@ -75,7 +84,7 @@ const MapScreen = () => {
         description: "Man missing near Kurla bus depot since morning",
         image: images.mimg,
         lastSeen: "2025-01-28 09:15",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0617,
@@ -83,10 +92,11 @@ const MapScreen = () => {
         type: "Missing Report 5",
         caseReference: "KRL-2025-005",
         fullName: "Lata Deshmukh",
-        description: "Elderly woman reported missing near BKC connector, Kurla East",
+        description:
+          "Elderly woman reported missing near BKC connector, Kurla East",
         image: images.mimg,
         lastSeen: "2025-01-28 11:30",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0721,
@@ -97,7 +107,7 @@ const MapScreen = () => {
         description: "Young adult missing from a commercial area in Kurla",
         image: images.mimg,
         lastSeen: "2025-01-28 16:00",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0758,
@@ -108,7 +118,7 @@ const MapScreen = () => {
         description: "Tourist missing near Lokmanya Tilak Terminus, Kurla",
         image: images.mimg,
         lastSeen: "2025-01-28 13:45",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0669,
@@ -116,10 +126,11 @@ const MapScreen = () => {
         type: "Missing Report 8",
         caseReference: "KRL-2025-008",
         fullName: "Sneha Patil",
-        description: "Employee reported missing from office building in Kurla East",
+        description:
+          "Employee reported missing from office building in Kurla East",
         image: images.mimg,
         lastSeen: "2025-01-28 17:20",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0625,
@@ -130,7 +141,7 @@ const MapScreen = () => {
         description: "Teenager missing from local bar near Kurla West",
         image: images.mimg,
         lastSeen: "2025-01-28 22:30",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0743,
@@ -141,7 +152,7 @@ const MapScreen = () => {
         description: "Man missing after vehicle breakdown near LBS Road, Kurla",
         image: images.mimg,
         lastSeen: "2025-01-28 20:15",
-        status: "Active"
+        status: "Active",
       },
       {
         latitude: 19.0681,
@@ -152,22 +163,22 @@ const MapScreen = () => {
         description: "Construction worker missing from site near Kurla East",
         image: images.mimg,
         lastSeen: "2025-01-28 12:45",
-        status: "Active"
+        status: "Active",
       },
       {
-        latitude: 19.0710,
+        latitude: 19.071,
         longitude: 72.8782,
         type: "Missing Report 12",
         caseReference: "KRL-2025-012",
         fullName: "Riya Shah",
-        description: "Child missing after street light malfunction near Kurla Market",
+        description:
+          "Child missing after street light malfunction near Kurla Market",
         image: images.mimg,
         lastSeen: "2025-01-28 19:30",
-        status: "Active"
-      }
+        status: "Active",
+      },
     ];
 
-    
     setDummyIncidents(dummyIncidents);
     setIncidents((prevIncidents) => [...prevIncidents, ...dummyIncidents]);
   }, []);
@@ -180,7 +191,9 @@ const MapScreen = () => {
     setSelectedIncident(null);
   };
   const toggleMapType = () => {
-    setMapType((prevType) => (prevType === "standard" ? "satellite" : "standard"));
+    setMapType((prevType) =>
+      prevType === "standard" ? "satellite" : "standard"
+    );
   };
 
   return (
@@ -216,7 +229,9 @@ const MapScreen = () => {
       </MapView>
       <TouchableOpacity style={styles.toggleButton} onPress={toggleMapType}>
         <Text style={styles.toggleButtonText}>
-          {mapType === "standard" ? "Switch to Satellite View" : "Switch to Standard View"}
+          {mapType === "standard"
+            ? "Switch to Satellite View"
+            : "Switch to Standard View"}
         </Text>
       </TouchableOpacity>
 
@@ -225,7 +240,7 @@ const MapScreen = () => {
         <View style={styles.incidentBox}>
           <View style={styles.incidentHeader}>
             <Text style={styles.incidentTitle}>{selectedIncident.type}</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={closeIncidentBox}
               style={styles.closeButton}
             >
@@ -233,16 +248,15 @@ const MapScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.incidentContent}>
-            <Image 
-              source={images.mimg} 
-              style={styles.personImage}
-            />
+            <Image source={images.mimg} style={styles.personImage} />
             <View style={styles.detailsContainer}>
               <View style={styles.detailRow}>
                 <Text style={styles.label}>Case Reference:</Text>
-                <Text style={styles.value}>{selectedIncident.caseReference}</Text>
+                <Text style={styles.value}>
+                  {selectedIncident.caseReference}
+                </Text>
               </View>
-              
+
               <View style={styles.detailRow}>
                 <Text style={styles.label}>Full Name:</Text>
                 <Text style={styles.value}>{selectedIncident.fullName}</Text>
@@ -250,11 +264,18 @@ const MapScreen = () => {
 
               <View style={styles.detailRow}>
                 <Text style={styles.label}>Status:</Text>
-                <Text style={[
-                  styles.value, 
-                  styles.statusText,
-                  {color: selectedIncident.status === 'Active' ? '#dc2626' : '#16a34a'}
-                ]}>
+                <Text
+                  style={[
+                    styles.value,
+                    styles.statusText,
+                    {
+                      color:
+                        selectedIncident.status === "Active"
+                          ? "#dc2626"
+                          : "#16a34a",
+                    },
+                  ]}
+                >
                   {selectedIncident.status}
                 </Text>
               </View>
@@ -266,13 +287,16 @@ const MapScreen = () => {
 
               <View style={styles.descriptionContainer}>
                 <Text style={styles.label}>Description:</Text>
-                <Text style={styles.description}>{selectedIncident.description}</Text>
+                <Text style={styles.description}>
+                  {selectedIncident.description}
+                </Text>
               </View>
 
               <View style={styles.locationContainer}>
                 <Text style={styles.label}>Location:</Text>
                 <Text style={styles.value}>
-                  {selectedIncident.latitude.toFixed(4)}, {selectedIncident.longitude.toFixed(4)}
+                  {selectedIncident.latitude.toFixed(4)},{" "}
+                  {selectedIncident.longitude.toFixed(4)}
                 </Text>
               </View>
             </View>
@@ -306,36 +330,36 @@ const styles = StyleSheet.create({
   },
   toggleButtonText: { color: "#fff", fontWeight: "bold" },
   incidentBox: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     transform: [
       { translateX: -150 }, // Half of width
       { translateY: -100 }, // Half of height
     ],
     width: 300,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
   incidentHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    backgroundColor: '#f8f8f8',
+    borderBottomColor: "#eee",
+    backgroundColor: "#f8f8f8",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
   incidentTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     flex: 1,
   },
   closeButton: {
@@ -343,8 +367,8 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#666',
+    fontWeight: "bold",
+    color: "#666",
   },
   incidentContent: {
     padding: 15,
@@ -356,7 +380,7 @@ const styles = StyleSheet.create({
   },
   incidentLocation: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 5,
   },
   loadingContainer: {
@@ -365,21 +389,21 @@ const styles = StyleSheet.create({
     left: "50%",
     transform: [{ translateX: -50 }, { translateY: -50 }],
   },
-   
+
   incidentBox: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     transform: [
       { translateX: -175 }, // Half of width
       { translateY: -250 }, // Half of height
     ],
     width: 350,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     marginBottom: 40,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -388,8 +412,8 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   personImage: {
-    width: '100%',
-    objectFit:'contain',
+    width: "100%",
+    objectFit: "contain",
     height: 150,
     borderRadius: 8,
     marginBottom: 15,
@@ -398,33 +422,33 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: "#f0f0f0",
   },
   label: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#666',
+    fontWeight: "bold",
+    color: "#666",
     flex: 1,
   },
   value: {
     fontSize: 14,
     flex: 2,
-    color: '#333',
+    color: "#333",
   },
   statusText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   descriptionContainer: {
     marginTop: 10,
   },
   description: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
     marginTop: 5,
     lineHeight: 20,
   },
@@ -432,9 +456,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: "#f0f0f0",
   },
-
 });
 
 export default MapScreen;

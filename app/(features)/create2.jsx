@@ -74,8 +74,13 @@ const CreateIncident = ({ onSubmit }) => {
       );
       const data = await response.json();
       //console.log(data);
-      
-      if (data && data.results && data.results[0] && data.results[0].formatted) {
+
+      if (
+        data &&
+        data.results &&
+        data.results[0] &&
+        data.results[0].formatted
+      ) {
         // Extract formatted address
         const formattedAddress = data.results[0].formatted;
         // Slice everything after "Mumbai"
@@ -86,8 +91,6 @@ const CreateIncident = ({ onSubmit }) => {
       console.error("Error fetching area:", error);
     }
   };
-  
-  
 
   useEffect(() => {
     getCurrentLocation();
@@ -175,7 +178,7 @@ const CreateIncident = ({ onSubmit }) => {
 
     try {
       const response = await axios.post(
-        "https://vt9hf745-3000.inc1.devtunnels.ms/api/posts/send-post",
+        "https://2xrn8gcc-3000.inc1.devtunnels.ms/api/posts/send-post",
         incident
       );
       console.log("Incident submitted successfully:", response.data);
