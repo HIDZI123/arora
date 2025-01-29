@@ -125,7 +125,7 @@ const EmergencyContacts = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FAF7F0' }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 16 }}>
+        <Text style={{ marginTop:30,fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 16 }}>
           {translations[language].title}
         </Text>
 

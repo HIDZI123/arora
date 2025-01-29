@@ -19,7 +19,7 @@ const Home = () => {
   const { user } = useGlobalContext();
 
   const cardData = [
-    { title: "Adhaar Verfification", img: icons.safest_route, link: "/heatmap" },
+    { title: "Adhaar Verfification", img: icons.adhaar, link: "/adhaar" },
     { title: "Safest Route", img: icons.safest_route, link: "/heatmap" },
     { title: "Book A Ride", img: icons.book_a_ride, link: "/book-a-ride" },
     { title: "Report Case", img: icons.report_incident, link: "/create" },
@@ -40,6 +40,8 @@ const Home = () => {
     },
     { title: "Webinars & Drills", img: icons.webinar, link: "/webinar" },
     { title: "Chat Bot", img: icons.chat_bot, link: "/chatbot" },
+    { title: "create2", img: icons.report_incident, link: "/create2" },
+
   ];
 
   const [postData, setPostData] = useState();

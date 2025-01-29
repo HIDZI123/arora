@@ -20,7 +20,7 @@ const MapScreen = () => {
           "https://vt9hf745-3000.inc1.devtunnels.ms/api/posts/get-post"
         ); // Replace with your actual API URL
         const data = response.data; // Assuming response.data contains an array of incidents
-        console.log("Incidents fetched:", data.data);
+        // console.log("Incidents fetched:", data.data);
         setIncidents(data.data); // Update incidents state with the API response
       } catch (error) {
         console.error("Error fetching incidents:", error);
