@@ -19,9 +19,10 @@ const Home = () => {
   const { user } = useGlobalContext();
 
   const cardData = [
+    { title: "Adhaar Verfification", img: icons.safest_route, link: "/heatmap" },
     { title: "Safest Route", img: icons.safest_route, link: "/heatmap" },
     { title: "Book A Ride", img: icons.book_a_ride, link: "/book-a-ride" },
-    { title: "Report Incident", img: icons.report_incident, link: "/create" },
+    { title: "Report Case", img: icons.report_incident, link: "/create" },
     {
       title: "Safety Alerts",
       img: icons.safety_alerts,
@@ -107,7 +108,7 @@ const Home = () => {
             </Text>
           </View>
           <Text className="text-white font-pmedium text-right mr-12">
-            Kurla
+            Bandra
           </Text>
         </View>
 
@@ -124,7 +125,7 @@ const Home = () => {
         </View>
 
         {/* Nearest Posts Section */}
-        <View className="mx-4 mt-5">
+        {/* <View className="mx-4 mt-5">
           <Text className="font-pbold text-xl mb-4">Nearest Posts</Text>
           {postData && postData.length > 0 ? (
             postData.map((post) => (
@@ -136,7 +137,7 @@ const Home = () => {
           ) : (
             <Text className="text-gray-500">No posts available.</Text>
           )}
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
