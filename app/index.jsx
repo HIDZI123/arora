@@ -6,6 +6,7 @@ import { images } from "../constants";
 import CustomButton from "../components/CustomButton"; // Make sure this path is correct
 import { router } from "expo-router";
 import {useGlobalContext} from './../context/GlobalProvider'
+import { Video } from 'expo-av';
 
 export default function App() {
 
@@ -16,6 +17,14 @@ export default function App() {
     }
   }, [isLogged])
 
+
+  const styles = {
+    video: {
+      width: '100%',
+      backgroundColor:'transparent',
+      height: 200,
+    },
+  };
 
   return (
     <SafeAreaView className="bg-[#FAF7F0] h-full">
@@ -31,13 +40,14 @@ export default function App() {
               className="w-full h-[150px]"
               resizeMode="contain"
             />
-            
           </View>
           <View className="shadow-2xl w-full">
-            <Image
-              source={images.cards}
-              className="ml-2 mr-4 max-w-[800px] w-full h-[298px] "
-              resizeMode="cover"
+            <Video
+              source={require('../assets/vid.mp4')} // Replace with your MP4 file path
+              style={styles.video}
+              shouldPlay
+              isLooping
+              resizeMode="contain"
             />
           </View>
 
@@ -56,7 +66,7 @@ export default function App() {
           </View>
 
           <Text className="text-sm font-pregular text-gray-100 mt-7 text-center">
-            Empowering Safety with Navनारी:                    Step into a World of Boundless Security and Confidence.
+            Empowering Safety with Navनारी: Step into a World of Boundless Security and Confidence.
           </Text>
 
           <CustomButton

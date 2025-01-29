@@ -49,7 +49,7 @@ const Home = () => {
     setIsRefreshing(true);
     try {
       const response = await axios.get(
-        "https://vt9hf745-8000.inc1.devtunnels.ms/api/posts/get-post"
+        "https://vt9hf745-3000.inc1.devtunnels.ms/api/posts/get-post"
       );
       //console.log("Fetched post data:", response.data.data); // Debugging line
 
