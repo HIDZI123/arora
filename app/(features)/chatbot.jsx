@@ -66,10 +66,7 @@ const Chatbot = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Icon name="robot" size={24} color="#E53E3E" style={styles.icon} />
-        <Text style={styles.headerText}>Chat</Text>
-      </View>
+      
 
       <ScrollView style={styles.chatArea} contentContainerStyle={styles.chatContent}>
         {messages.map((message, index) => (

@@ -1,433 +1,170 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  Modal,
-} from "react-native";
-import { Picker } from "@react-native-picker/picker"; // Import the Picker
-import * as ImagePicker from "expo-image-picker";
-import * as Location from "expo-location";
-import { Audio } from "expo-av";
-import Icon1 from "react-native-vector-icons/FontAwesome5";
-import Icon2 from "react-native-vector-icons/FontAwesome";
-import MapView, { Marker } from "react-native-maps"; // Import MapView and Marker
-import axios from "axios";
+import React, { useState } from "react"
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native"
+import PersonalInformation from "../../components/PersonalInformation"
+import PhysicalDescription from "../../components/PhysicalDescription"
+import LastSeenDetails from "../../components/LastSeenDetails"
+import MedicalCommunication from "../../components/MedicalCommunication"
+import EmergencyContact from "../../components/EmergencyContact"
+import MediaUpload from "../../components/MediaUpload"
 
-const CreateIncident = ({ onSubmit }) => {
-  const [incidentType, setIncidentType] = useState("");
-  const [description, setDescription] = useState("");
-  const [area, setArea] = useState("");
-  const [location, setLocation] = useState(null);
-  const [photoFiles, setPhotoFiles] = useState([]);
-  const [videoFiles, setVideoFiles] = useState([]);
-  const [audioFiles, setAudioFiles] = useState([]); // Change from single audioFile to array
-  const [isRecording, setIsRecording] = useState(false);
-  const [recording, setRecording] = useState();
-  const [modalVisible, setModalVisible] = useState(false); // New state for map modal
-  const [mapRegion, setMapRegion] = useState({
-    latitude: 37.78825, // Default latitude
-    longitude: -122.4324, // Default longitude
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+const TOTAL_STEPS = 6
 
-  const incidentTypes = [
-    "Select Incident Type",
-    "Theft",
-    "Accident",
-    "Harassment",
-    "Suspicious Activity",
-    "Other",
-  ];
+export default function App() {
+  const [currentStep, setCurrentStep] = useState(1)
+  const [formData, setFormData] = useState({
+    fullName: "",
+    aliases: "",
+    dob: "",
+    age: "",
+    gender: "",
+    adhaar: "",
+    height: "",
+    weight: "",
+    complexion: "",
+    hairColor: "",
+    distinguishingFeatures: "",
+    medicalConditions: [],
+    lastSeenDate: "",
+    lastSeenTime: "",
+    lastLocation: "",
+    clothingDescription: "",
+    circumstances: "",
+    medications: "",
+    languages: "",
+    socialMedia: "",
+    emergencyContact: {
+      name: "",
+      relationship: "",
+      phone: "",
+      email: "",
+    },
+    consent: false,
+    media: {
+      photos: [],
+      videos: [],
+      audio: [],
+    },
+    location: {
+      latitude: null,
+      longitude: null,
+      address: "",
+    },
+  })
 
-  const getCurrentLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission to access location was denied");
-      return;
+  const updateFormData = (newData) => {
+    setFormData((prevData) => ({ ...prevData, ...newData }))
+  }
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <PersonalInformation formData={formData} updateFormData={updateFormData} />
+      case 2:
+        return <PhysicalDescription formData={formData} updateFormData={updateFormData} />
+      case 3:
+        return <LastSeenDetails formData={formData} updateFormData={updateFormData} />
+      case 4:
+        return <MedicalCommunication formData={formData} updateFormData={updateFormData} />
+      case 5:
+        return <EmergencyContact formData={formData} updateFormData={updateFormData} />
+      case 6:
+        return <MediaUpload formData={formData} updateFormData={updateFormData} />
+      default:
+        return null
     }
+  }
 
-    let loc = await Location.getCurrentPositionAsync({});
-    setLocation({
-      latitude: loc.coords.latitude,
-      longitude: loc.coords.longitude,
-    });
-    setMapRegion({
-      latitude: loc.coords.latitude,
-      longitude: loc.coords.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
-    fetchAreaFromCoordinates(loc.coords.latitude, loc.coords.longitude);
-  };
-
-  const fetchAreaFromCoordinates = async (latitude, longitude) => {
-    const apiKey = "481d4c5872394224891c17558ab0c022"; // Replace with your OpenCage API key
-    try {
-      const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
-      );
-      const data = await response.json();
-      //console.log(data);
-      
-      if (data && data.results && data.results[0] && data.results[0].formatted) {
-        // Extract formatted address
-        const formattedAddress = data.results[0].formatted;
-        // Slice everything after "Mumbai"
-        const slicedAddress = formattedAddress.split("Mumbai")[0] + "Mumbai";
-        setArea(slicedAddress);
-      }
-    } catch (error) {
-      console.error("Error fetching area:", error);
+  const handleNext = () => {
+    if (currentStep < TOTAL_STEPS) {
+      setCurrentStep(currentStep + 1)
+    } else {
+      // Submit form
+      console.log("Form submitted:", formData)
     }
-  };
-  
-  
+  }
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
-  const pickPhotos = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-    });
-    if (!result.canceled) {
-      setPhotoFiles([
-        ...photoFiles,
-        ...result.assets.map((asset) => asset.uri),
-      ]);
-      Alert.alert("Photo Saved", "Your file has been saved successfully!", [
-        { text: "OK" },
-      ]);
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
     }
-  };
-
-  const pickVideos = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      allowsMultipleSelection: true,
-    });
-    if (!result.canceled) {
-      setVideoFiles([
-        ...videoFiles,
-        ...result.assets.map((asset) => asset.uri),
-      ]);
-      Alert.alert("Video Saved", "Your file has been saved successfully!", [
-        { text: "OK" },
-      ]);
-    }
-  };
-
-  const startAudioRecording = async () => {
-    try {
-      await Audio.requestPermissionsAsync();
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
-      setIsRecording(true);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Error starting audio recording:", err);
-    }
-  };
-
-  const stopAudioRecording = async () => {
-    if (recording) {
-      await recording.stopAndUnloadAsync();
-      setIsRecording(false);
-      const uri = recording.getURI();
-      console.log("Recording stopped and stored at", uri);
-      setAudioFiles([...audioFiles, uri]); // Add recorded audio to audioFiles array
-
-      Alert.alert(
-        "Recording Saved",
-        "Your voice recording has been saved successfully!",
-        [{ text: "OK" }]
-      );
-    }
-  };
-
-  const handleLocationSelect = (latitude, longitude) => {
-    setLocation({ latitude, longitude });
-    setModalVisible(false); // Close the modal
-  };
-
-  const handleSubmit = async () => {
-    const incident = {
-      type: incidentType,
-      description,
-      location: area, // Use area as the location
-      latitude: location?.latitude || null,
-      longitude: location?.longitude || null,
-      photoFiles,
-      videoFiles,
-      audioFiles, // Send the array of audio files
-    };
-    console.log(incident);
-
-    try {
-      const response = await axios.post(
-        "https://vt9hf745-3000.inc1.devtunnels.ms/api/posts/send-post",
-        incident
-      );
-      console.log("Incident submitted successfully:", response.data);
-      resetForm();
-    } catch (error) {
-      console.error("Error submitting incident:", error);
-      alert("Error submitting incident: " + error.response.data.message);
-    }
-  };
-
-  const resetForm = () => {
-    setIncidentType("");
-    setDescription("");
-    setArea("");
-    setLocation(null);
-    setPhotoFiles([]);
-    setVideoFiles([]);
-    setAudioFiles([]); // Reset audioFiles array
-  };
+  }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.label}>Incident Type</Text>
-      <Picker
-        selectedValue={incidentType}
-        onValueChange={(itemValue) => setIncidentType(itemValue)}
-        style={styles.picker}
-      >
-        {incidentTypes.map((type, index) => (
-          <Picker.Item label={type} value={type} key={index} />
-        ))}
-      </Picker>
-
-      <Text style={styles.label}>Description</Text>
-      <TextInput
-        style={styles.textArea}
-        placeholder="Enter Description"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
-
-      <Text style={styles.label}>Area</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Area will be auto-filled"
-        value={area}
-        editable={false} // Make area input read-only
-      />
-
-      <View style={styles.locationContainer}>
-        <TouchableOpacity
-          style={styles.mapButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.mapButtonText}>Pick Location </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.currentLocationButton}
-          onPress={getCurrentLocation}
-        >
-          <Text style={styles.currentLocationButtonText}>Current Location</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.label}>Location</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={
-          location
-            ? `Lat: ${location.latitude}, Lon: ${location.longitude}`
-            : "Fetching current location..."
-        }
-        value={location ? `${location.latitude}, ${location.longitude}` : ""}
-        editable={false}
-      />
-
-      <View style={styles.mediaButtonsContainer}>
-        <TouchableOpacity style={styles.squareButton} onPress={pickPhotos}>
-          <Icon2 name="photo" size={30} color="#fff" />
-          <Text style={styles.buttonText}>Photos</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.squareButton} onPress={pickVideos}>
-          <Icon1 name="video" size={30} color="#fff" />
-          <Text style={styles.buttonText}>Video</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.squareButton, isRecording && styles.buttonActive]}
-          onPress={isRecording ? stopAudioRecording : startAudioRecording}
-        >
-          <Icon2
-            name={isRecording ? "microphone-slash" : "microphone"}
-            size={30}
-            color="#fff"
-          />
-          <Text style={styles.buttonText}>
-            {isRecording ? "Stop" : "Record"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit Incident</Text>
-      </TouchableOpacity>
-
-      {/* Modal for Map */}
-      <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.modalContainer}>
-          <MapView
-            style={styles.map}
-            region={mapRegion}
-            onRegionChangeComplete={(region) => setMapRegion(region)}
-            onPress={(e) =>
-              handleLocationSelect(
-                e.nativeEvent.coordinate.latitude,
-                e.nativeEvent.coordinate.longitude
-              )
-            }
-          >
-            {location && (
-              <Marker coordinate={location} title="Selected Location" />
-            )}
-          </MapView>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Missing Person Report</Text>
+      <View style={styles.progressContainer}>
+        <Text style={styles.progressText}>
+          Step {currentStep} of {TOTAL_STEPS}
+        </Text>
+        <View style={styles.progressBar}>
+          <View style={[styles.progress, { width: `${(currentStep / TOTAL_STEPS) * 100}%` }]} />
         </View>
-      </Modal>
-    </ScrollView>
-  );
-};
+      </View>
+      {renderStep()}
+      <View style={styles.navigationContainer}>
+        <TouchableOpacity
+          style={[styles.button, currentStep === 1 && styles.disabledButton]}
+          onPress={handlePrevious}
+          disabled={currentStep === 1}
+        >
+          <Text style={styles.buttonText}>Previous</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleNext}>
+          <Text style={styles.buttonText}>{currentStep === TOTAL_STEPS ? "Submit" : "Next"}</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    marginTop: 50,
+    flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#f5f5f5",
   },
-  label: {
-    fontSize: 16,
+  title: {
+    fontSize: 25,
     fontWeight: "bold",
+    marginTop: 20,  
+  },
+  progressContainer: {
+    marginTop: 40,
+    marginBottom: 20,
+  },
+  progressText: {
+    fontSize: 16,
     marginBottom: 5,
   },
-  picker: {
-    height: 50,
-    width: "100%",
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 15,
-    backgroundColor: "#bab9b6",
+  progressBar: {
+    height: 10,
+    backgroundColor: "#e0e0e0",
+    borderRadius: 5,
   },
-  input: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 4,
-
-    paddingHorizontal: 10,
+  progress: {
+    height: "100%",
+    backgroundColor: "#4caf50",
+    borderRadius: 5,
   },
-  textArea: {
-    height: 100,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-  },
-  mediaButtonsContainer: {
+  navigationContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 20,
+    marginTop: 20,
   },
-  squareButton: {
-    backgroundColor: "#007BFF",
-    flex: 1,
-    backgroundColor: "#007bff",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 25,
+  button: {
+    backgroundColor: "#2196f3",
     padding: 10,
-    margin: 5,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  disabledButton: {
+    backgroundColor: "#bdbdbd",
   },
   buttonText: {
-    color: "#fff",
-    marginTop: 5,
-  },
-  submitButton: {
-    backgroundColor: "#28a745",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: "white",
     fontSize: 16,
   },
-  mapButton: {
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-    marginVertical: 15,
-  },
-  currentLocationButton: {
-    backgroundColor: "#28a745",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-    marginVertical: 15,
-    marginLeft: 10,
-  },
-  mapButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  currentLocationButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  modalContainer: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-    width: "100%",
-    height: "50%", // Limit height of map
-  },
-  closeButton: {
-    backgroundColor: "#dc3545",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  closeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  locationContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 15,
-  },
-});
+})
 
-export default CreateIncident;

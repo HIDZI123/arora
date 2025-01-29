@@ -13,6 +13,6 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "app/_layout.jsx"
-, "components/MediaUpload.jsx"  ],
+, "components/MediaUpload.jsx", "app/(features)/safety-alerts.jsx"  ],
   "extends": "expo/tsconfig.base"
 }
