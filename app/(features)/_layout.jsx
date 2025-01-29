@@ -45,7 +45,7 @@ const AppNavigator = () => {
         />
         
         <Stack.Screen
-          name="chat-bot"
+          name="chatbot"
           options={{
             headerShown: false,
           }}
