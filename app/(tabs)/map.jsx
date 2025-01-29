@@ -1,137 +1,202 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Button, ActivityIndicator } from "react-native";
+import { View, StyleSheet, Button, ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import MapView, { UrlTile, Marker } from "react-native-maps";
 import axios from "axios";
 
 const MapScreen = () => {
-  const mapTilerAPIKey = "aHUEnRceg03OQys2K9jt"; // Replace with your MapTiler API key
+  const mapTilerAPIKey = "aHUEnRceg03OQys2K9jt";
 
-  const [showIncidents, setShowIncidents] = useState(true); // Toggle to show/hide incidents
-  const [incidents, setIncidents] = useState([]); // Incident data from the backend
-  const [loading, setLoading] = useState(false); // Loading state
-  const [dummyIncidents, setDummyIncidents] = useState([]); // Dummy incidents
+  const [showIncidents, setShowIncidents] = useState(true);
+  const [incidents, setIncidents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [dummyIncidents, setDummyIncidents] = useState([]);
+  const [selectedIncident, setSelectedIncident] = useState(null);
 
   useEffect(() => {
-    // Fetch incidents from the backend
     const fetchIncidents = async () => {
-      setLoading(true); // Set loading to true while fetching data
+      setLoading(true);
       try {
         const response = await axios.get(
           "https://vt9hf745-3000.inc1.devtunnels.ms/api/posts/get-post"
-        ); // Replace with your actual API URL
-        const data = response.data; // Assuming response.data contains an array of incidents
-        console.log("Incidents fetched:", data.data);
-        setIncidents(data.data); // Update incidents state with the API response
+        );
+        const data = response.data;
+        // console.log("Incidents fetched:", data.data);
+        setIncidents(data.data);
       } catch (error) {
         console.error("Error fetching incidents:", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchIncidents(); // Call the function to fetch data on component mount
 
     // Create dummy incidents
-    const dummyIncidents = [
+    [
       {
         latitude: 19.0653,
         longitude: 72.8797,
-        type: " Incident 7",
-        description: "Suspicious activity reported near Kurla Railway Station",
+        type: "Missing Report 1",
+        caseReference: "KRL-2025-001",
+        fullName: "Rahul Patel",
+        description: "Teenager missing near Kurla Railway Station",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 15:30",
+        status: "Active"
       },
       {
         latitude: 19.0698,
         longitude: 72.8744,
-        type: " Incident 8",
-        description: "Loud noise complaint from residential area in Kurla West",
+        type: "Missing Report 2",
+        caseReference: "KRL-2025-002",
+        fullName: "Priya Sharma",
+        description: "Middle-aged woman reported missing from a residential area in Kurla West",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 18:45",
+        status: "Active"
       },
       {
         latitude: 19.0634,
         longitude: 72.8805,
-        type: " Incident 9",
-        description: "Traffic congestion observed near Phoenix Marketcity Mall",
+        type: "Missing Report 3",
+        caseReference: "KRL-2025-003",
+        fullName: "Aditya Singh",
+        description: "Child missing from Phoenix Marketcity Mall, Kurla",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 14:20",
+        status: "Active"
       },
       {
         latitude: 19.0679,
         longitude: 72.8732,
-        type: " Incident 10",
-        description: "Stray dog sighting near Kurla bus depot",
+        type: "Missing Report 4",
+        caseReference: "KRL-2025-004",
+        fullName: "Rajesh Kumar",
+        description: "Man missing near Kurla bus depot since morning",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 09:15",
+        status: "Active"
       },
       {
         latitude: 19.0617,
         longitude: 72.8789,
-        type: " Incident 11",
-        description: "Minor accident near BKC connector, Kurla East",
+        type: "Missing Report 5",
+        caseReference: "KRL-2025-005",
+        fullName: "Lata Deshmukh",
+        description: "Elderly woman reported missing near BKC connector, Kurla East",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 11:30",
+        status: "Active"
       },
       {
         latitude: 19.0721,
         longitude: 72.8708,
-        type: " Incident 12",
-        description: "Unauthorized parking reported in a commercial area, Kurla",
+        type: "Missing Report 6",
+        caseReference: "KRL-2025-006",
+        fullName: "Arjun Mehta",
+        description: "Young adult missing from a commercial area in Kurla",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 16:00",
+        status: "Active"
       },
-      // Additional  Incidents
       {
         latitude: 19.0758,
         longitude: 72.8679,
-        type: " Incident 13",
-        description: "Theft reported near Lokmanya Tilak Terminus, Kurla",
+        type: "Missing Report 7",
+        caseReference: "KRL-2025-007",
+        fullName: "James Wilson",
+        description: "Tourist missing near Lokmanya Tilak Terminus, Kurla",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 13:45",
+        status: "Active"
       },
       {
         latitude: 19.0669,
         longitude: 72.8812,
-        type: " Incident 14",
-        description: "Fire alarm triggered in an office building, Kurla East",
+        type: "Missing Report 8",
+        caseReference: "KRL-2025-008",
+        fullName: "Sneha Patil",
+        description: "Employee reported missing from office building in Kurla East",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 17:20",
+        status: "Active"
       },
       {
         latitude: 19.0625,
         longitude: 72.8768,
-        type: " Incident 15",
-        description: "Fight reported at a local bar near Kurla West",
+        type: "Missing Report 9",
+        caseReference: "KRL-2025-009",
+        fullName: "Kunal Verma",
+        description: "Teenager missing from local bar near Kurla West",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 22:30",
+        status: "Active"
       },
       {
         latitude: 19.0743,
         longitude: 72.8741,
-        type: " Incident 16",
-        description: "Vehicle breakdown causing traffic near LBS Road, Kurla",
+        type: "Missing Report 10",
+        caseReference: "KRL-2025-010",
+        fullName: "Mahesh Joshi",
+        description: "Man missing after vehicle breakdown near LBS Road, Kurla",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 20:15",
+        status: "Active"
       },
       {
         latitude: 19.0681,
         longitude: 72.8735,
-        type: " Incident 17",
-        description: "Noise complaint from construction site, Kurla East",
+        type: "Missing Report 11",
+        caseReference: "KRL-2025-011",
+        fullName: "Santosh Yadav",
+        description: "Construction worker missing from site near Kurla East",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 12:45",
+        status: "Active"
       },
       {
         latitude: 19.0710,
         longitude: 72.8782,
-        type: " Incident 18",
-        description: "Street light malfunction reported near Kurla Market",
+        type: "Missing Report 12",
+        caseReference: "KRL-2025-012",
+        fullName: "Riya Shah",
+        description: "Child missing after street light malfunction near Kurla Market",
+        image: "/api/placeholder/150/150",
+        lastSeen: "2025-01-28 19:30",
+        status: "Active"
       }
     ];
-    setDummyIncidents(dummyIncidents);
 
+    
+    setDummyIncidents(dummyIncidents);
     setIncidents((prevIncidents) => [...prevIncidents, ...dummyIncidents]);
   }, []);
 
+  const handleMarkerPress = (incident) => {
+    setSelectedIncident(incident);
+  };
+
+  const closeIncidentBox = () => {
+    setSelectedIncident(null);
+  };
+
   return (
     <View style={styles.container}>
-      {/* Map View */}
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 19.076, // Center around Mumbai (latitude and longitude)
+          latitude: 19.076,
           longitude: 72.8777,
-          latitudeDelta: 0.05, // Zoom level
+          latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}
       >
-        {/* MapTiler Tile Layer */}
         <UrlTile
           urlTemplate={`https://api.maptiler.com/maps/satellite/256/{z}/{x}/{y}.png?key=${mapTilerAPIKey}`}
           maximumZ={19}
-          flipY={false} // For non-flipped tiles
+          flipY={false}
         />
 
-        {/* Show incidents if toggled on */}
         {showIncidents &&
           dummyIncidents.map((incident, index) => (
             <Marker
@@ -142,20 +207,32 @@ const MapScreen = () => {
               }}
               title={incident.type}
               description={incident.description}
+              onPress={() => handleMarkerPress(incident)}
             />
           ))}
       </MapView>
 
-      {/* Buttons to toggle incidents visibility */}
-      <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <Button
-            title={showIncidents ? "Hide Incidents" : "Show Incidents"}
-            onPress={() => setShowIncidents(!showIncidents)}
-            color={showIncidents ? "red" : "green"}
-          />
+      {/* Incident Information Box */}
+      {selectedIncident && (
+        <View style={styles.incidentBox}>
+          <View style={styles.incidentHeader}>
+            <Text style={styles.incidentTitle}>{selectedIncident.type}</Text>
+            <TouchableOpacity 
+              onPress={closeIncidentBox}
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>×</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.incidentContent}>
+            <Text style={styles.incidentDescription}>{selectedIncident.description}</Text>
+            <Text style={styles.incidentLocation}>
+              Location: {selectedIncident.latitude.toFixed(4)}, {selectedIncident.longitude.toFixed(4)}
+            </Text>
+            {/* Add more incident details here as needed */}
+          </View>
         </View>
-      </View>
+      )}
 
       {/* Loading Spinner */}
       {loading && (
@@ -175,19 +252,59 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  buttonContainer: {
-    position: "absolute",
-    bottom: 20, // Position the buttons near the bottom
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    justifyContent: "center", // Center buttons horizontally
+  incidentBox: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [
+      { translateX: -150 }, // Half of width
+      { translateY: -100 }, // Half of height
+    ],
+    width: 300,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
-  button: {
-    width: 150, // Button width
-    marginHorizontal: 10, // Space between buttons
-    borderRadius: 10, // Rounded corners for the button container
-    overflow: "hidden", // Ensures rounded corners on Button
+  incidentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    backgroundColor: '#f8f8f8',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  incidentTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  closeButton: {
+    padding: 5,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#666',
+  },
+  incidentContent: {
+    padding: 15,
+  },
+  incidentDescription: {
+    fontSize: 16,
+    marginBottom: 10,
+    lineHeight: 22,
+  },
+  incidentLocation: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
   },
   loadingContainer: {
     position: "absolute",
