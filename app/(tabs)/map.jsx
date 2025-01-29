@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Button, ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Button, ActivityIndicator, Text, TouchableOpacity, Image } from "react-native";
 import MapView, { UrlTile, Marker } from "react-native-maps";
 import axios from "axios";
+import { images } from "../../constants";
 
 const MapScreen = () => {
   const mapTilerAPIKey = "aHUEnRceg03OQys2K9jt";
-
+  const [mapType, setMapType] = useState("standard");
   const [showIncidents, setShowIncidents] = useState(true);
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,6 @@ const MapScreen = () => {
           "https://vt9hf745-3000.inc1.devtunnels.ms/api/posts/get-post"
         );
         const data = response.data;
-        // console.log("Incidents fetched:", data.data);
         setIncidents(data.data);
       } catch (error) {
         console.error("Error fetching incidents:", error);
@@ -32,7 +32,7 @@ const MapScreen = () => {
     fetchIncidents(); // Call the function to fetch data on component mount
 
     // Create dummy incidents
-    [
+    const dummyIncidents = [
       {
         latitude: 19.0653,
         longitude: 72.8797,
@@ -40,7 +40,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-001",
         fullName: "Rahul Patel",
         description: "Teenager missing near Kurla Railway Station",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 15:30",
         status: "Active"
       },
@@ -51,7 +51,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-002",
         fullName: "Priya Sharma",
         description: "Middle-aged woman reported missing from a residential area in Kurla West",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 18:45",
         status: "Active"
       },
@@ -62,7 +62,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-003",
         fullName: "Aditya Singh",
         description: "Child missing from Phoenix Marketcity Mall, Kurla",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 14:20",
         status: "Active"
       },
@@ -73,7 +73,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-004",
         fullName: "Rajesh Kumar",
         description: "Man missing near Kurla bus depot since morning",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 09:15",
         status: "Active"
       },
@@ -84,7 +84,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-005",
         fullName: "Lata Deshmukh",
         description: "Elderly woman reported missing near BKC connector, Kurla East",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 11:30",
         status: "Active"
       },
@@ -95,7 +95,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-006",
         fullName: "Arjun Mehta",
         description: "Young adult missing from a commercial area in Kurla",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 16:00",
         status: "Active"
       },
@@ -106,7 +106,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-007",
         fullName: "James Wilson",
         description: "Tourist missing near Lokmanya Tilak Terminus, Kurla",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 13:45",
         status: "Active"
       },
@@ -117,7 +117,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-008",
         fullName: "Sneha Patil",
         description: "Employee reported missing from office building in Kurla East",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 17:20",
         status: "Active"
       },
@@ -128,7 +128,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-009",
         fullName: "Kunal Verma",
         description: "Teenager missing from local bar near Kurla West",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 22:30",
         status: "Active"
       },
@@ -139,7 +139,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-010",
         fullName: "Mahesh Joshi",
         description: "Man missing after vehicle breakdown near LBS Road, Kurla",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 20:15",
         status: "Active"
       },
@@ -150,7 +150,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-011",
         fullName: "Santosh Yadav",
         description: "Construction worker missing from site near Kurla East",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 12:45",
         status: "Active"
       },
@@ -161,7 +161,7 @@ const MapScreen = () => {
         caseReference: "KRL-2025-012",
         fullName: "Riya Shah",
         description: "Child missing after street light malfunction near Kurla Market",
-        image: "/api/placeholder/150/150",
+        image: images.mimg,
         lastSeen: "2025-01-28 19:30",
         status: "Active"
       }
@@ -179,6 +179,9 @@ const MapScreen = () => {
   const closeIncidentBox = () => {
     setSelectedIncident(null);
   };
+  const toggleMapType = () => {
+    setMapType((prevType) => (prevType === "standard" ? "satellite" : "standard"));
+  };
 
   return (
     <View style={styles.container}>
@@ -192,7 +195,7 @@ const MapScreen = () => {
         }}
       >
         <UrlTile
-          urlTemplate={`https://api.maptiler.com/maps/satellite/256/{z}/{x}/{y}.png?key=${mapTilerAPIKey}`}
+          urlTemplate={`https://api.maptiler.com/maps/${mapType}/256/{z}/{x}/{y}.png?key=${mapTilerAPIKey}`}
           maximumZ={19}
           flipY={false}
         />
@@ -205,12 +208,17 @@ const MapScreen = () => {
                 latitude: incident.latitude,
                 longitude: incident.longitude,
               }}
-              title={incident.type}
-              description={incident.description}
+              // title={incident.type}
+              // description={incident.description}
               onPress={() => handleMarkerPress(incident)}
             />
           ))}
       </MapView>
+      <TouchableOpacity style={styles.toggleButton} onPress={toggleMapType}>
+        <Text style={styles.toggleButtonText}>
+          {mapType === "standard" ? "Switch to Satellite View" : "Switch to Standard View"}
+        </Text>
+      </TouchableOpacity>
 
       {/* Incident Information Box */}
       {selectedIncident && (
@@ -221,15 +229,53 @@ const MapScreen = () => {
               onPress={closeIncidentBox}
               style={styles.closeButton}
             >
-              <Text style={styles.closeButtonText}>×</Text>
+              <Text style={styles.closeButtonText}>x</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.incidentContent}>
-            <Text style={styles.incidentDescription}>{selectedIncident.description}</Text>
-            <Text style={styles.incidentLocation}>
-              Location: {selectedIncident.latitude.toFixed(4)}, {selectedIncident.longitude.toFixed(4)}
-            </Text>
-            {/* Add more incident details here as needed */}
+            <Image 
+              source={images.mimg} 
+              style={styles.personImage}
+            />
+            <View style={styles.detailsContainer}>
+              <View style={styles.detailRow}>
+                <Text style={styles.label}>Case Reference:</Text>
+                <Text style={styles.value}>{selectedIncident.caseReference}</Text>
+              </View>
+              
+              <View style={styles.detailRow}>
+                <Text style={styles.label}>Full Name:</Text>
+                <Text style={styles.value}>{selectedIncident.fullName}</Text>
+              </View>
+
+              <View style={styles.detailRow}>
+                <Text style={styles.label}>Status:</Text>
+                <Text style={[
+                  styles.value, 
+                  styles.statusText,
+                  {color: selectedIncident.status === 'Active' ? '#dc2626' : '#16a34a'}
+                ]}>
+                  {selectedIncident.status}
+                </Text>
+              </View>
+
+              <View style={styles.detailRow}>
+                <Text style={styles.label}>Last Seen:</Text>
+                <Text style={styles.value}>{selectedIncident.lastSeen}</Text>
+              </View>
+
+              <View style={styles.descriptionContainer}>
+                <Text style={styles.label}>Description:</Text>
+                <Text style={styles.description}>{selectedIncident.description}</Text>
+              </View>
+
+              <View style={styles.locationContainer}>
+                <Text style={styles.label}>Location:</Text>
+                <Text style={styles.value}>
+                  {selectedIncident.latitude.toFixed(4)}, {selectedIncident.longitude.toFixed(4)}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       )}
@@ -249,9 +295,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 30,
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
+  map: { flex: 1 },
+  toggleButton: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    backgroundColor: "#000",
+    padding: 10,
+    borderRadius: 5,
   },
+  toggleButtonText: { color: "#fff", fontWeight: "bold" },
   incidentBox: {
     position: 'absolute',
     top: '50%',
@@ -312,6 +365,76 @@ const styles = StyleSheet.create({
     left: "50%",
     transform: [{ translateX: -50 }, { translateY: -50 }],
   },
+   
+  incidentBox: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [
+      { translateX: -175 }, // Half of width
+      { translateY: -250 }, // Half of height
+    ],
+    width: 350,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginBottom: 40,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  incidentContent: {
+    padding: 15,
+  },
+  personImage: {
+    width: '100%',
+    objectFit:'contain',
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 15,
+  },
+  detailsContainer: {
+    gap: 10,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#666',
+    flex: 1,
+  },
+  value: {
+    fontSize: 14,
+    flex: 2,
+    color: '#333',
+  },
+  statusText: {
+    fontWeight: 'bold',
+  },
+  descriptionContainer: {
+    marginTop: 10,
+  },
+  description: {
+    fontSize: 14,
+    color: '#333',
+    marginTop: 5,
+    lineHeight: 20,
+  },
+  locationContainer: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+
 });
 
 export default MapScreen;
