@@ -1,16 +1,22 @@
-import React, { useState } from "react"
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native"
-import PersonalInformation from "../../components/PersonalInformation"
-import PhysicalDescription from "../../components/PhysicalDescription"
-import LastSeenDetails from "../../components/LastSeenDetails"
-import MedicalCommunication from "../../components/MedicalCommunication"
-import EmergencyContact from "../../components/EmergencyContact"
-import MediaUpload from "../../components/MediaUpload"
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+import PersonalInformation from "../../components/PersonalInformation";
+import PhysicalDescription from "../../components/PhysicalDescription";
+import LastSeenDetails from "../../components/LastSeenDetails";
+import MedicalCommunication from "../../components/MedicalCommunication";
+import EmergencyContact from "../../components/EmergencyContact";
+import MediaUpload from "../../components/MediaUpload";
 
-const TOTAL_STEPS = 6
+const TOTAL_STEPS = 6;
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     fullName: "",
     aliases: "",
@@ -49,55 +55,89 @@ export default function App() {
       longitude: null,
       address: "",
     },
-  })
+  });
 
   const updateFormData = (newData) => {
-    setFormData((prevData) => ({ ...prevData, ...newData }))
-  }
+    setFormData((prevData) => ({ ...prevData, ...newData }));
+  };
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <PersonalInformation formData={formData} updateFormData={updateFormData} />
+        return (
+          <PersonalInformation
+            formData={formData}
+            updateFormData={updateFormData}
+          />
+        );
       case 2:
-        return <PhysicalDescription formData={formData} updateFormData={updateFormData} />
+        return (
+          <PhysicalDescription
+            formData={formData}
+            updateFormData={updateFormData}
+          />
+        );
       case 3:
-        return <LastSeenDetails formData={formData} updateFormData={updateFormData} />
+        return (
+          <LastSeenDetails
+            formData={formData}
+            updateFormData={updateFormData}
+          />
+        );
       case 4:
-        return <MedicalCommunication formData={formData} updateFormData={updateFormData} />
+        return (
+          <MedicalCommunication
+            formData={formData}
+            updateFormData={updateFormData}
+          />
+        );
       case 5:
-        return <EmergencyContact formData={formData} updateFormData={updateFormData} />
+        return (
+          <EmergencyContact
+            formData={formData}
+            updateFormData={updateFormData}
+          />
+        );
       case 6:
-        return <MediaUpload formData={formData} updateFormData={updateFormData} />
+        return (
+          <MediaUpload formData={formData} updateFormData={updateFormData} />
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const handleNext = () => {
     if (currentStep < TOTAL_STEPS) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep + 1);
     } else {
       // Submit form
-      console.log("Form submitted:", formData)
+      console.log("Form submitted:", formData);
     }
-  }
+  };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+      setCurrentStep(currentStep - 1);
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Missing Person Report</Text>
+      
+      <View style={styles.separator} />
       <View style={styles.progressContainer}>
         <Text style={styles.progressText}>
           Step {currentStep} of {TOTAL_STEPS}
         </Text>
         <View style={styles.progressBar}>
-          <View style={[styles.progress, { width: `${(currentStep / TOTAL_STEPS) * 100}%` }]} />
+          <View
+            style={[
+              styles.progress,
+              { width: `${(currentStep / TOTAL_STEPS) * 100}%` },
+            ]}
+          />
         </View>
       </View>
       {renderStep()}
@@ -110,27 +150,35 @@ export default function App() {
           <Text style={styles.buttonText}>Previous</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonText}>{currentStep === TOTAL_STEPS ? "Submit" : "Next"}</Text>
+          <Text style={styles.buttonText}>
+            {currentStep === TOTAL_STEPS ? "Submit" : "Next"}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
+    paddingTop: 50,
     flex: 1,
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f9e8c1",
   },
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    marginTop: 20,  
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#e0e0ff",
+    marginVertical: 10,
   },
   progressContainer: {
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 20,
   },
   progressText: {
@@ -153,7 +201,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#fda001",
     padding: 10,
     borderRadius: 5,
     width: "45%",
@@ -166,5 +214,4 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
-})
-
+});

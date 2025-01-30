@@ -98,7 +98,7 @@ const TabLayout = () => {
           name="create"
           options={{
             title: "CreateIncident",
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.plus}

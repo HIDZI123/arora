@@ -45,88 +45,54 @@ const Home = () => {
 
   const [postData, setPostData] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const data = [
+  const missingChildrenData = [
     {
-      __v: 0,
-      _id: "66f7b2acf31173ae8e85153d",
-      audioFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509164/bngvklc4zxckp5tug9wn.ogg",
-      comments: [Array],
-      createdAt: "2024-09-28T07:39:24.515Z",
-      description:
-        "Two cars collided at Junction, No casualties but heavy traffic",
-      dislike: 2,
-      imageFiles: [Array],
-      latitude: 19.191032,
-      like: 12,
-      location: "Malad , Mumbai",
-      longitude: 72.856205,
-      summary:
-        "The incident occurred at Junction due to a two-vehicle collision, with an unspecified number of people involved. Hallmarks of the event were the absence of casualties, as initially stated, and the heavy traffic congestion resulting from a reported 'terrible traffic situation'.",
-      type: "Accident",
-      updatedAt: "2024-09-28T07:39:24.515Z",
-      videoFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509163/tzm2cnf6ax5mfwtpq33e.mp4",
+      adhaar: "1234-5678-9101",
+      fullName: "Aarav Sharma",
+      age: "12",
+      aliases: "Avi",
+      lastLocation: "Mumbai, Maharashtra",
+      lastSeenDate: "2024-01-15",
+      lastSeenTime: "14:30",
+      emergencyContact: {
+        name: "Neha Sharma",
+        phone: "9876543210",
+        email: "neha.sharma@email.com",
+      },
+      image:
+        "https://images.generated.photos/1zt-Lw23Phdy1H2m9ZGPbhRsDdKGpQj-rpPyMnBU_-U/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDE1NzMzLmpwZw.jpg",
     },
     {
-      __v: 0,
-      _id: "66f7b39ef31173ae8e85153f",
-      audioFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509406/b2fnabtwozynfisk5mtp.ogg",
-      comments: [Array],
-      createdAt: "2024-09-28T07:43:26.716Z",
-      description:
-        "A backpack was stolen from a park bench at Park. The owner left it unattended for a few minutes.",
-      dislike: 2,
-      imageFiles: [Array],
-      latitude: 19.175278,
-      like: 15,
-      location: "Thane",
-      longitude: 72.972416,
-      type: "Accident",
-      updatedAt: "2024-09-28T07:43:26.716Z",
-      videoFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509405/o5mfy5gc1wkixuzwojwt.mp4",
+      adhaar: "2345-6789-0123",
+      fullName: "Sanya Gupta",
+      age: "9",
+      aliases: "Sanu",
+      lastLocation: "Delhi",
+      lastSeenDate: "2024-01-10",
+      lastSeenTime: "18:00",
+      emergencyContact: {
+        name: "Rohit Gupta",
+        phone: "9876541230",
+        email: "rohit.gupta@email.com",
+      },
+      image:
+        "https://images.generated.photos/Ue6VJO_Vpht_z8CYWPXzs8tf-Ym2SkBWk32dF9DONdg/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/Nzc2MTc2LmpwZw.jpg",
     },
     {
-      __v: 0,
-      _id: "66f7b3f6f31173ae8e851541",
-      audioFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509493/tasi0j7vyxhvkjzheesh.ogg",
-      comments: [Array],
-      createdAt: "2024-09-28T07:44:54.210Z",
-      description:
-        " A man was reported harassing women outside the coffee shop on 2nd Street.",
-      dislike: 2,
-      imageFiles: [Array],
-      latitude: 19.175278,
-      like: 15,
-      location: "Goregaon , Mumbai",
-      longitude: 72.972416,
-      type: "Harassment",
-      updatedAt: "2024-09-28T07:44:54.210Z",
-      videoFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509492/umefvuap27n4uglf62pk.mp4",
-    },
-    {
-      __v: 0,
-      _id: "66f7b516f31173ae8e85154b",
-      audioFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509781/ogs3kkjqt6cv8zanm69h.ogg",
-      comments: [Array],
-      createdAt: "2024-09-28T07:49:42.281Z",
-      description:
-        "A vehicle with no license plates has been parked near the school for over an hour.",
-      dislike: 2,
-      imageFiles: [Array],
-      latitude: 19.415346,
-      like: 15,
-      location: "Nalasopara , Thane",
-      longitude: 72.863872,
-      type: "Suspicious Activity",
-      updatedAt: "2024-09-28T07:49:42.281Z",
-      videoFile:
-        "http://res.cloudinary.com/dhsxyniue/video/upload/v1727509780/ghnmnv8muw6octamopme.mp4",
+      adhaar: "3456-7890-1234",
+      fullName: "Kabir Singh",
+      age: "14",
+      aliases: "Kabi",
+      lastLocation: "Bangalore, Karnataka",
+      lastSeenDate: "2024-01-20",
+      lastSeenTime: "20:00",
+      emergencyContact: {
+        name: "Anjali Singh",
+        phone: "9876509876",
+        email: "anjali.singh@email.com",
+      },
+      image:
+        "https://images.generated.photos/YJJJkoxsyHqj1qbQdgZ9kMbZ7Z5G3ESN4mPIOoN2VfI/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/MzQ0Nzg5LmpwZw.jpg",
     },
   ];
 
@@ -157,7 +123,7 @@ const Home = () => {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#FAF7F0] mt-10">
+    <SafeAreaView className="flex-1 bg-[#f9e8c1] pt-8">
       <ScrollView
         contentContainerStyle="flex-grow p-4"
         refreshControl={
@@ -208,20 +174,46 @@ const Home = () => {
           ))}
         </View>
 
-        {/* Nearest Posts Section */}
-        {/* <View className="mx-4 mt-5">
-          <Text className="font-pbold text-xl mb-4">Nearest Posts</Text>
-          {postData && postData.length > 0 ? (
-            postData.map((post) => (
-              <PostCard
-                key={post._id}
-                post={post}
-              />
+        <View className="mx-4 mt-5">
+          <Text className="font-pbold text-xl mb-4">Missing Children</Text>
+          {missingChildrenData.length > 0 ? (
+            missingChildrenData.map((child, index) => (
+              <View
+                key={index}
+                className="mb-4 p-4 bg-[#eedec2] rounded-lg shadow"
+              >
+                <Image
+                  source={{ uri: child.image }}
+                  className="h-60 w-full rounded-md object-cover"
+                />
+                <Text className="text-lg font-bold mt-2">
+                  {child.fullName} ({child.age} years old)
+                </Text>
+                <Text className="text-gray-600">
+                  Last Seen: {child.lastLocation} on {child.lastSeenDate} at{" "}
+                  {child.lastSeenTime}
+                </Text>
+                <Text className="text-gray-600">
+                  Clothing: {child.clothingDescription}
+                </Text>
+                <Text className="text-gray-600">
+                  Distinguishing Features: {child.distinguishingFeatures}
+                </Text>
+                <Text className="text-gray-600">
+                  Guardian: {child.emergencyContact.name} (
+                  {child.emergencyContact.relationship})
+                </Text>
+                <Text className="text-gray-600">
+                  Contact: {child.emergencyContact.phone}
+                </Text>
+              </View>
             ))
           ) : (
-            <Text className="text-gray-500">No posts available.</Text>
+            <Text className="text-gray-500">
+              No missing children data available.
+            </Text>
           )}
-        </View> */}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

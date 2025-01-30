@@ -80,7 +80,7 @@ const SignUp = () => {
       />
 
       <TouchableOpacity
-        className="bg-blue-500 rounded-lg p-3 w-full"
+        className="bg-[#fda001] rounded-lg p-3 w-full"
         onPress={submit}
       >
         <Text className="text-white text-center font-semibold">Sign Up</Text>
@@ -89,7 +89,7 @@ const SignUp = () => {
       <Text className="text-gray-600 mt-4">
         Already have an account?
         <Text
-          className="text-blue-500 font-semibold"
+          className="text-secondary-200 font-semibold"
           onPress={() => router.push("/sign-in")}
         >
           Sign In

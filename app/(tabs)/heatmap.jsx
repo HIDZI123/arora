@@ -238,8 +238,8 @@ const MapComponent = () => {
 
             {/* Circular Button to fetch and draw the routes */}
             <TouchableOpacity style={styles.circleButton} onPress={getRoutes}>
-                <Icon name="route" size={35} color="white" />
-                <Text style={styles.buttonText}>Go</Text>
+                <Icon name="route" size={35} color="#fda001" />
+                <Text style={styles.buttonText1}>Go</Text>
             </TouchableOpacity>
 
             {/* Button to clear the routes */}
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 50,
-        backgroundColor: 'blue',
+        backgroundColor: '#f9e8c1',
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5, // For Android shadow
@@ -299,6 +299,10 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.3,
         shadowRadius: 3.84,
+    },
+    buttonText1: {
+        color: '#fda001',
+        fontWeight: 'bold',
     },
     buttonText: {
         color: 'white',

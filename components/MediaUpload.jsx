@@ -1,17 +1,14 @@
+import { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as VideoThumbnails from "expo-video-thumbnails";
+import { Audio } from "expo-av";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
-import { useState } from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
-import * as ImagePicker from "expo-image-picker"
-import * as VideoThumbnails from "expo-video-thumbnails"
-import { Audio } from "expo-av"
-import { Ionicons } from "@expo/vector-icons"
-import { FontAwesome } from "@expo/vector-icons"
-
-
-
-const MediaUpload= ({ formData, updateFormData }) => {
-  const [isRecording, setIsRecording] = useState(false)
-  const [recording, setRecording] = useState(null)
+const MediaUpload = ({ formData, updateFormData }) => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [recording, setRecording] = useState(null);
 
   const pickPhotos = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -19,18 +16,18 @@ const MediaUpload= ({ formData, updateFormData }) => {
       allowsMultipleSelection: true,
       aspect: [4, 3],
       quality: 1,
-    })
+    });
 
     if (!result.canceled) {
-      const newPhotos = result.assets.map((asset) => asset.uri)
+      const newPhotos = result.assets.map((asset) => asset.uri);
       updateFormData({
         media: {
           ...formData.media,
           photos: [...formData.media.photos, ...newPhotos],
         },
-      })
+      });
     }
-  }
+  };
 
   const pickVideos = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -38,60 +35,62 @@ const MediaUpload= ({ formData, updateFormData }) => {
       allowsMultipleSelection: true,
       aspect: [16, 9],
       quality: 1,
-    })
+    });
 
     if (!result.canceled) {
       const newVideos = await Promise.all(
         result.assets.map(async (asset) => {
           const thumbnail = await VideoThumbnails.getThumbnailAsync(asset.uri, {
             time: 1000,
-          })
-          return { uri: asset.uri, thumbnail: thumbnail.uri }
-        }),
-      )
+          });
+          return { uri: asset.uri, thumbnail: thumbnail.uri };
+        })
+      );
 
       updateFormData({
         media: {
           ...formData.media,
           videos: [...formData.media.videos, ...newVideos],
         },
-      })
+      });
     }
-  }
+  };
 
   const startAudioRecording = async () => {
-    const { status } = await Audio.requestPermissionsAsync()
-    if (status !== "granted") return
+    const { status } = await Audio.requestPermissionsAsync();
+    if (status !== "granted") return;
 
-    const newRecording = new Audio.Recording()
+    const newRecording = new Audio.Recording();
     try {
-      await newRecording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY)
-      await newRecording.startAsync()
-      setRecording(newRecording)
-      setIsRecording(true)
+      await newRecording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      await newRecording.startAsync();
+      setRecording(newRecording);
+      setIsRecording(true);
     } catch (error) {
-      console.error("Failed to start recording", error)
+      console.error("Failed to start recording", error);
     }
-  }
+  };
 
   const stopAudioRecording = async () => {
-    if (!recording) return
+    if (!recording) return;
 
     try {
-      await recording.stopAndUnloadAsync()
-      const uri = recording.getURI()
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
       updateFormData({
         media: {
           ...formData.media,
           audio: [...formData.media.audio, uri],
         },
-      })
-      setRecording(null)
-      setIsRecording(false)
+      });
+      setRecording(null);
+      setIsRecording(false);
     } catch (error) {
-      console.error("Failed to stop recording", error)
+      console.error("Failed to stop recording", error);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -111,24 +110,38 @@ const MediaUpload= ({ formData, updateFormData }) => {
           style={[styles.squareButton, isRecording && styles.buttonActive]}
           onPress={isRecording ? stopAudioRecording : startAudioRecording}
         >
-          <FontAwesome name={isRecording ? "microphone-slash" : "microphone"} size={30} color="#fff" />
-          <Text style={styles.buttonText}>{isRecording ? "Stop" : "Record"}</Text>
+          <FontAwesome
+            name={isRecording ? "microphone-slash" : "microphone"}
+            size={30}
+            color="#fff"
+          />
+          <Text style={styles.buttonText}>
+            {isRecording ? "Stop" : "Record"}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.mediaPreview}>
         {formData.media.photos.map((photo, index) => (
-          <Image key={index} source={{ uri: photo }} style={styles.previewImage} />
+          <Image
+            key={index}
+            source={{ uri: photo }}
+            style={styles.previewImage}
+          />
         ))}
         {formData.media.videos.map((video, index) => (
-          <Image key={index} source={{ uri: video.thumbnail }} style={styles.previewImage} />
+          <Image
+            key={index}
+            source={{ uri: video.thumbnail }}
+            style={styles.previewImage}
+          />
         ))}
         {formData.media.audio.map((audio, index) => (
           <Text key={index}>Audio {index + 1}</Text>
         ))}
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -147,7 +160,7 @@ const styles = StyleSheet.create({
   squareButton: {
     width: 100,
     height: 100,
-    backgroundColor: "#2196f3",
+    backgroundColor: "#fda001",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -168,7 +181,6 @@ const styles = StyleSheet.create({
     height: 100,
     margin: 5,
   },
-})
+});
 
-export default MediaUpload
-
+export default MediaUpload;

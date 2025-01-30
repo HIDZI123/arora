@@ -58,7 +58,7 @@ const SignIn = () => {
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-white p-6">
+    <View className="flex-1 justify-center items-center bg-[#f9e8c1] p-6">
       <Image
         source={images.logo}
         className="w-full h-[150px]"
@@ -83,7 +83,7 @@ const SignIn = () => {
       />
 
       <TouchableOpacity
-        className="bg-blue-500 rounded-lg p-3 w-full"
+        className="bg-[#fda001] rounded-lg p-3 w-full"
         onPress={submit}
       >
         <Text className="text-white text-center font-semibold">Sign In</Text>
@@ -92,7 +92,7 @@ const SignIn = () => {
       <Text className="text-gray-600 mt-4">
         Don't have an account?
         <Text
-          className="text-blue-500 font-semibold"
+          className="text-secondary-200  font-semibold"
           onPress={() => router.push("/sign-up")}
         >
           {" "}

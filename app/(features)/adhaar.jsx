@@ -74,7 +74,7 @@ const QRScannerComponent = () => {
 
       const result = await response.json();
 
-      console.log("Result:", result);
+      // console.log("Result:", result);
       setApiResponse(result);
 
     } catch (error) {

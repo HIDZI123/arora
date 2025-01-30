@@ -1,44 +1,54 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native"
-import DateTimePicker from "@react-native-community/datetimepicker"
-import MapView, { Marker } from "react-native-maps"
-import * as Location from "expo-location"
-
-
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 
 const LastSeenDetails = ({ formData, updateFormData }) => {
   const handleChange = (name, value) => {
-    updateFormData({ [name]: value })
-  }
+    updateFormData({ [name]: value });
+  };
 
   const handleLocationChange = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync()
+    const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      console.log("Permission to access location was denied")
-      return
+      console.log("Permission to access location was denied");
+      return;
     }
 
-    const location = await Location.getCurrentPositionAsync({})
+    const location = await Location.getCurrentPositionAsync({});
     updateFormData({
       location: {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        address: await getAddressFromCoordinates(location.coords.latitude, location.coords.longitude),
+        address: await getAddressFromCoordinates(
+          location.coords.latitude,
+          location.coords.longitude
+        ),
       },
-    })
-  }
+    });
+  };
 
   const getAddressFromCoordinates = async (latitude, longitude) => {
     try {
-      const addresses = await Location.reverseGeocodeAsync({ latitude, longitude })
+      const addresses = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
       if (addresses.length > 0) {
-        const address = addresses[0]
-        return `${address.street}, ${address.city}, ${address.region}, ${address.country}`
+        const address = addresses[0];
+        return `${address.street}, ${address.city}, ${address.region}, ${address.country}`;
       }
     } catch (error) {
-      console.error("Error getting address:", error)
+      console.error("Error getting address:", error);
     }
-    return ""
-  }
+    return "";
+  };
 
   return (
     <View style={styles.container}>
@@ -52,7 +62,7 @@ const LastSeenDetails = ({ formData, updateFormData }) => {
           handleChange("lastSeenDate", currentDate.toISOString())
         }}
       /> */}
-{/*       <DateTimePicker
+      {/*       <DateTimePicker
         value={formData.lastSeenTime ? new Date(formData.lastSeenTime) : new Date()}
         mode="time"
         display="default"
@@ -103,8 +113,8 @@ const LastSeenDetails = ({ formData, updateFormData }) => {
         multiline
       />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -117,13 +127,14 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    backgroundColor: "#eedec2",
+    borderColor: "gray",
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
   },
   button: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#fda001",
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
@@ -136,7 +147,6 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 10,
   },
-})
+});
 
-export default LastSeenDetails
-
+export default LastSeenDetails;
